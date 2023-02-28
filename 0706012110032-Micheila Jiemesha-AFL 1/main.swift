@@ -111,6 +111,7 @@ repeat {
         
         😈 Name: Troll x1
         😈 Health: 1000
+        
         """)
     }
 } while choice.lowercased() != "q"
