@@ -6,3 +6,21 @@
 //
 
 import Foundation
+
+var cafeteriaChoice: String = ""
+
+print("""
+Welcome to UC-Walk Cafeteria
+Please choose cafeteria:
+
+[1] Tuku-Tuku
+[2] Gotri
+[3] Madam Lie
+[4] Kopte
+-
+[S]hopping Cart
+[Q]uit
+
+""")
+
+print("Your cafeteria choice? ", terminator: "")
