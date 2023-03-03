@@ -38,6 +38,127 @@ var HP: Int = 100
 var MP: Int = 50
 var potion: Int = 20
 var elixir: Int = 5
+var THP: Int = 1000
+var GHP: Int = 1000
+
+func monsterScreenPrint(monster: String) {
+    print("")
+    
+    if (monster == "Troll") {
+        print("""
+        As you enter the forest, you feel a sense of unease wash over you.
+        Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
+        
+        😈 Name: Troll x1
+        😈 Health: \(THP)
+        """)
+    } else {
+        print("""
+        As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
+        
+        😈 Name: Golem x1
+        😈 Health: \(GHP)
+        """)
+    }
+    
+    print("""
+    
+    Choose your action:
+    [1] Physical Attack. No mana required. Deal 5pt of damage.
+    [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
+    [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
+    
+    [4] Use Potion to heal wound.
+    [5] Scan enemy's vital.
+    [6] Flee from battle.
+    
+    """)
+}
+
+func returnToGoBack() {
+    var rchoice: String = ""
+    
+    repeat {
+        print("Press [return] to go back: ", terminator: "")
+        
+        rchoice = readLine()!
+    } while rchoice != ""
+}
+
+func healing() {
+    HP += 20
+    potion -= 1
+    
+    if (HP > 100) {
+        HP = 100
+    }
+}
+
+func healingScreen() {
+    var hchoice: String = ""
+    
+    if potion > 0 && HP < 100 {
+        print("""
+        \nYour HP is \(HP).
+        You have \(potion) Potions.
+        
+        """)
+        
+        repeat {
+            print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
+            
+            hchoice = readLine()!
+        } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
+        
+        if (hchoice.lowercased() == "y") {
+            healing()
+            
+            repeat {
+                if potion > 0 && HP < 100 {
+                    print("""
+                    \nYour HP is \(HP) now.
+                    You have \(potion) Potions left.
+                    
+                    """)
+                    
+                    repeat {
+                        print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
+                        
+                        hchoice = readLine()!
+                    } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
+                    
+                    if (hchoice.lowercased() == "y") {
+                        healing()
+                    }
+                } else if potion < 0 {
+                    print("\nYou don't have any potion left. Be careful of your next journey.")
+                    
+                    repeat {
+                        print("Press [return] to go back: ", terminator: "")
+                        
+                        hchoice = readLine()!
+                    } while hchoice != ""
+                } else {
+                    print("\nYour health is already maxed.")
+                    
+                    repeat {
+                        print("Press [return] to go back: ", terminator: "")
+                        
+                        hchoice = readLine()!
+                    } while hchoice != ""
+                }
+            } while hchoice.lowercased() != "n" && hchoice != ""
+        }
+    } else if potion < 0 {
+        print("\nYou don't have any potion left. Be careful of your next journey.")
+        
+        returnToGoBack()
+    } else {
+        print("\nYour health is already maxed.")
+        
+        returnToGoBack()
+    }
+}
 
 repeat {
     print("\nFrom here, you can...")
@@ -61,7 +182,7 @@ repeat {
     } while (choice.lowercased() == "c" || choice.lowercased() == "h" || choice.lowercased() == "f" || choice.lowercased() == "m" || choice.lowercased() == "q") == false
     
     if (choice.lowercased() == "c") {
-        var cchoice: String = ""
+//        var cchoice: String = ""
         
         print("""
         Player Name: \(userName)
@@ -80,78 +201,81 @@ repeat {
         
         """)
         
-        repeat {
-            print("Press [return] to go back: ", terminator: "")
-            
-            cchoice = readLine()!
-        } while cchoice != ""
-    } else if (choice.lowercased() == "h") {
-        var hchoice: String = ""
+//        repeat {
+//            print("Press [return] to go back: ", terminator: "")
+//
+//            cchoice = readLine()!
+//        } while cchoice != ""
         
-        if potion > 0 {
-            print("""
-            \nYour HP is \(HP).
-            You have \(potion) Potions.
-            
-            """)
-            
-            repeat {
-                print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
-                
-                hchoice = readLine()!
-            } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
-            
-            if (hchoice.lowercased() == "y") {
-                HP += 20
-                potion -= 1
-                
-                if (HP > 100) {
-                    HP = 100
-                }
-            }
-            
-            while hchoice.lowercased() != "n" {
-                print("""
-                \nYour HP is \(HP) now.
-                You have \(potion) Potions left.
-                
-                """)
-                
-                repeat {
-                    print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
-                    
-                    hchoice = readLine()!
-                } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
-            }
-        } else {
-            print("You don't have any potion left. Be careful of your next journey.")
-            
-            repeat {
-                print("Press [return] to go back: ", terminator: "")
-                
-                hchoice = readLine()!
-            } while hchoice != ""
-        }
+        returnToGoBack()
+    } else if (choice.lowercased() == "h") {
+//        var hchoice: String = ""
+//
+//        if potion > 0 {
+//            print("""
+//            \nYour HP is \(HP).
+//            You have \(potion) Potions.
+//
+//            """)
+//
+//            repeat {
+//                print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
+//
+//                hchoice = readLine()!
+//            } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
+//
+//            if (hchoice.lowercased() == "y") {
+//                healing()
+//            }
+//
+//            while hchoice.lowercased() != "n" {
+//                if potion > 0 {
+//                    print("""
+//                    \nYour HP is \(HP) now.
+//                    You have \(potion) Potions left.
+//
+//                    """)
+//
+//                    repeat {
+//                        print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
+//
+//                        hchoice = readLine()!
+//                    } while hchoice.lowercased() != "y" && hchoice.lowercased() != "n"
+//
+//                    if (hchoice.lowercased() == "y") {
+//                        healing()
+//                    }
+//                } else {
+//                    noPotionsLeftScreen()
+//                }
+//            }
+//        } else {
+//            noPotionsLeftScreen()
+//        }
+        
+        healingScreen()
     } else if (choice.lowercased() == "f") {
         var fchoice: String = ""
         
-        print("""
-        As you enter the forest, you feel a sense of unease wash over you.
-        Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
+//        print("""
+//        As you enter the forest, you feel a sense of unease wash over you.
+//        Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
+//
+//        😈 Name: Troll x1
+//        😈 Health: \(THP)
+//
+//        Choose your action:
+//        [1] Physical Attack. No mana required. Deal 5pt of damage.
+//        [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
+//        [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
+//
+//        [4] Use Potion to heal wound.
+//        [5] Scan enemy's vital.
+//        [6] Flee from battle.
+//
+//        """)
         
-        😈 Name: Troll x1
-        😈 Health: 1000
-        
-        Choose your action:
-        [1] Physical Attack. No mana required. Deal 5pt of damage.
-        [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
-        [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
-        
-        [4] Use Potion to heal wound.
-        [5] Scan enemy's vital.
-        [6] Flee from battle.
-        
-        """)
+        monsterScreenPrint(monster: "Troll")
         
         repeat {
             print("Your choice? ", terminator: "")
@@ -166,31 +290,35 @@ repeat {
             You're safe, for now.
             """)
             
-            repeat {
-                print("Press [return] to go back: ", terminator: "")
-                
-                fchoice = readLine()!
-            } while fchoice != ""
+//            repeat {
+//                print("Press [return] to go back: ", terminator: "")
+//
+//                fchoice = readLine()!
+//            } while fchoice != ""
+            
+            returnToGoBack()
         }
     } else if (choice.lowercased() == "m") {
         var mchoice: String = ""
         
-        print("""
-        As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
+//        print("""
+//        As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
+//
+//        😈 Name: Golem x1
+//        😈 Health: \(GHP)
+//
+//        Choose your action:
+//        [1] Physical Attack. No mana required. Deal 5pt of damage.
+//        [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
+//        [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
+//
+//        [4] Use Potion to heal wound.
+//        [5] Scan enemy's vital.
+//        [6] Flee from battle.
+//
+//        """)
         
-        😈 Name: Golem x1
-        😈 Health: 1000
-        
-        Choose your action:
-        [1] Physical Attack. No mana required. Deal 5pt of damage.
-        [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
-        [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
-        
-        [4] Use Potion to heal wound.
-        [5] Scan enemy's vital.
-        [6] Flee from battle.
-        
-        """)
+        monsterScreenPrint(monster: "Golem")
         
         repeat {
             print("Your choice? ", terminator: "")
@@ -205,11 +333,19 @@ repeat {
             You're safe, for now.
             """)
             
-            repeat {
-                print("Press [return] to go back: ", terminator: "")
-                
-                mchoice = readLine()!
-            } while mchoice != ""
+//            repeat {
+//                print("Press [return] to go back: ", terminator: "")
+//
+//                mchoice = readLine()!
+//            } while mchoice != ""
+            
+            returnToGoBack()
         }
     }
-} while choice.lowercased() != "q"
+} while choice.lowercased() != "q" || HP <= 0
+
+if (HP <= 0) {
+    print("\n")
+} else {
+    print("")
+}
