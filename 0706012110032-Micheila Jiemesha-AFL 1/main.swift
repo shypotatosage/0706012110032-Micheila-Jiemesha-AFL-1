@@ -307,6 +307,11 @@ func enemyAttack(monster: Int) {
             print("\nThe \(monsterName[monster]) swiftly moves towards your back and slashed your body with a sharp rock making your health decrease by \(damage).\n")
         }
     }
+    
+    var coins = Int.random(in: 1..<25)
+    money += coins
+    
+    print("\nYou gained \(coins) Coins.\n")
 }
 
 func monsterAttackScreen(monster: Int) {
@@ -410,7 +415,7 @@ func shopScreen() {
         var temp: String = ""
         
         repeat {
-            print("Howmany would you like to buy? ([0] Back) ", terminator: "")
+            print("\nHowmany would you like to buy? ([0] Back) ", terminator: "")
             temp = readLine()!
             
             if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
@@ -431,7 +436,7 @@ func shopScreen() {
                 potions["Potion"]! += amount
                 money -= price["Potion"]! * amount
             } else {
-                print("\nYour money is not enough.\n")
+                print("\nYour money is not enough.")
             }
         }
     case "2":
@@ -440,7 +445,7 @@ func shopScreen() {
         var temp: String = ""
         
         repeat {
-            print("Howmany would you like to buy? ([0] Back) ", terminator: "")
+            print("\nHowmany would you like to buy? ([0] Back) ", terminator: "")
             temp = readLine()!
             
             if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
@@ -461,7 +466,7 @@ func shopScreen() {
                 potions["Elixir"]! += amount
                 money -= price["Elixir"]! * amount
             } else {
-                print("\nYour money is not enough.\n")
+                print("\nYour money is not enough.")
             }
         }
     default:
