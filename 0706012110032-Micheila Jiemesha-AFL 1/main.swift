@@ -24,6 +24,8 @@ let price = ["Potion": 35, "Elixir": 50]
 
 // Functions
 // ==========================================================================================
+
+// Function untuk Action Menu dalam Forest/Mountain
 func chooseAction() {
     print("""
     
@@ -44,6 +46,7 @@ func chooseAction() {
     """)
 }
 
+//Function untuk Check Enemy's Vital
 func enemyVital(monster: Int) {
     print("""
     
@@ -54,6 +57,7 @@ func enemyVital(monster: Int) {
     returnToGoBack()
 }
 
+//Function untuk printing saat pertama kali masuk Forest/Mountain
 func monsterScreenPrint(monster: Int) {
     print("")
     
@@ -77,6 +81,7 @@ func monsterScreenPrint(monster: Int) {
     """)
 }
 
+//Function untuk mempersingkat Return To Go Back karena dipakai berulang kali
 func returnToGoBack() {
     var returnChoice: String = ""
     
@@ -87,6 +92,7 @@ func returnToGoBack() {
     } while returnChoice != ""
 }
 
+//Function untuk menjalankan proses healing
 func healing() {
     HP += 20
     potions["Potion"]! -= 1
@@ -96,6 +102,7 @@ func healing() {
     }
 }
 
+//Function untuk menjalankan proses recover mana
 func recoverMana() {
     MP += 10
     potions["Elixir"]! -= 1
@@ -105,6 +112,7 @@ func recoverMana() {
     }
 }
 
+//Function untuk menampilkan layar recover mana karena ada dipakai 2 kali, di home dan ketika melawan monster
 func recoverManaScreen() {
     var manaChoice: String = ""
     
@@ -171,6 +179,7 @@ func recoverManaScreen() {
     }
 }
 
+//Function untuk menampilkan layar healing karena ditampilkan 2 kali, di home dan ketika melawan monster
 func healingScreen() {
     var healingChoice: String = ""
     
@@ -237,6 +246,7 @@ func healingScreen() {
     }
 }
 
+//Function ketika player memilih Physical Attack saat melawan monster
 func physicalAttack(monster: Int) {
     monsterHP[monster] -= 5
     
@@ -244,6 +254,7 @@ func physicalAttack(monster: Int) {
     print("You have dealt 5 damage to the \(monsterName[monster])\n")
 }
 
+//Function ketika player memilih Meteor saat melawan monster
 func meteor(monster: Int) {
     if (MP < 15) {
         print("""
@@ -264,6 +275,7 @@ func meteor(monster: Int) {
     }
 }
 
+//Function ketika player memilih Shield saat melawan monster
 func shield(monster: Int) {
     if (MP < 10) {
         print("""
@@ -284,6 +296,7 @@ func shield(monster: Int) {
     }
 }
 
+//Function untuk mengecek Skill Stack apakah ada Shield? Jika ada maka return skip yang menandakan bahwa monster tidak bisa mendamage player selama 1 turn
 func checkSkillStack() -> String {
     if (skillStack.contains("Shield")) {
         return "Skip"
@@ -292,6 +305,7 @@ func checkSkillStack() -> String {
     return "None"
 }
 
+//Function untuk menjalankan logika saat monster menyerang
 func enemyAttack(monster: Int) {
     if (checkSkillStack() == "Skip") {
         print("\nThe \(monsterName[monster]) jumps to your face, yet you succeeded to block his attacks with your shield.\n")
@@ -308,12 +322,13 @@ func enemyAttack(monster: Int) {
         }
     }
     
-    var coins = Int.random(in: 1..<25)
+    let coins = Int.random(in: 1..<25)
     money += coins
     
     print("\nYou gained \(coins) Coins.\n")
 }
 
+//Function untuk menampilkan layar saat battle bersama monster
 func monsterAttackScreen(monster: Int) {
     var choice: String = ""
     var turn: Int = 0
@@ -380,6 +395,7 @@ func monsterAttackScreen(monster: Int) {
     monsterHP[monster] = 1000
 }
 
+//Function untuk menampilkan layar saat memasuki shop
 func shopScreen() {
     var choice: String = ""
     var choiceRepeat: Bool = false
@@ -557,7 +573,7 @@ repeat {
 } while mainChoice.lowercased() != "q" && HP > 0
 
 if (HP <= 0) {
-    print("\nToo bad... ")
+    print("\nToo bad, \(userName)... You have drained all your health and died as a hero in the hands of the monster 🥲")
 } else {
-    print("")
+    print("I guess this is the end. May we meet again, \(userName)!")
 }
