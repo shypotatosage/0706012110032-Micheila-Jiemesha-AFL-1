@@ -89,6 +89,10 @@ func returnToGoBack() {
         print("Press [return] to go back: ", terminator: "")
         
         returnChoice = readLine()!
+        
+        if (returnChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+            print("\nWrong Input! You must [return] to continue")
+        }
     } while returnChoice != ""
 }
 
@@ -127,6 +131,10 @@ func recoverManaScreen() {
             print("Are you sure you want to use 1 elixir to recover mana? [Y/N] ", terminator: "")
             
             manaChoice = readLine()!
+            
+            if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
+                print("\nYou must only choose between Y (Yes) or N (No).\n")
+            }
         } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
         
         if (manaChoice.lowercased() == "y") {
@@ -144,6 +152,10 @@ func recoverManaScreen() {
                         print("Still want to use 1 elixir to recover mana again? [Y/N] ", terminator: "")
                         
                         manaChoice = readLine()!
+                        
+                        if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
+                            print("\nYou must only choose between Y (Yes) or N (No).\n")
+                        }
                     } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
                     
                     if (manaChoice.lowercased() == "y") {
@@ -156,6 +168,10 @@ func recoverManaScreen() {
                         print("Press [return] to go back: ", terminator: "")
                         
                         manaChoice = readLine()!
+                        
+                        if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                            print("\nWrong Input! You must [return] to continue")
+                        }
                     } while manaChoice != ""
                 } else {
                     print("\nYour mana is already maxed.")
@@ -164,6 +180,10 @@ func recoverManaScreen() {
                         print("Press [return] to go back: ", terminator: "")
                         
                         manaChoice = readLine()!
+                        
+                        if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                            print("\nWrong Input! You must [return] to continue")
+                        }
                     } while manaChoice != ""
                 }
             } while manaChoice.lowercased() != "n" && manaChoice != ""
@@ -194,6 +214,10 @@ func healingScreen() {
             print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
             
             healingChoice = readLine()!
+            
+            if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
+                print("\nYou must only choose between Y (Yes) or N (No).\n")
+            }
         } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
         
         if (healingChoice.lowercased() == "y") {
@@ -211,6 +235,10 @@ func healingScreen() {
                         print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
                         
                         healingChoice = readLine()!
+                        
+                        if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
+                            print("\nYou must only choose between Y (Yes) or N (No).\n")
+                        }
                     } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
                     
                     if (healingChoice.lowercased() == "y") {
@@ -223,6 +251,10 @@ func healingScreen() {
                         print("Press [return] to go back: ", terminator: "")
                         
                         healingChoice = readLine()!
+                        
+                        if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                            print("\nWrong Input! You must [return] to continue")
+                        }
                     } while healingChoice != ""
                 } else {
                     print("\nYour health is already maxed.\n")
@@ -231,6 +263,10 @@ func healingScreen() {
                         print("Press [return] to go back: ", terminator: "")
                         
                         healingChoice = readLine()!
+                        
+                        if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                            print("\nWrong Input! You must [return] to continue")
+                        }
                     } while healingChoice != ""
                 }
             } while healingChoice.lowercased() != "n" && healingChoice != ""
@@ -348,11 +384,15 @@ func monsterAttackScreen(monster: Int) {
                 if (choice.range(of: "[^1-7]", options: .regularExpression) == nil) {
                     if (Int(choice)! < 1 || Int(choice)! > 7) {
                         choiceRepeat = true
+                        
+                        print("\nChoice must be between 1-7.\n")
                     } else {
                         choiceRepeat = false
                     }
                 } else {
                     choiceRepeat = true
+                    
+                    print("\nChoice must be a number between 1-7.\n")
                 }
             } while choiceRepeat
             
@@ -416,11 +456,15 @@ func shopScreen() {
         if (choice.range(of: "[^0-2]", options: .regularExpression) == nil) {
             if (Int(choice)! < 0 || Int(choice)! > 2) {
                 choiceRepeat = true
+                
+                print("\nChoice must be between 0-2.\n")
             } else {
                 choiceRepeat = false
             }
         } else {
             choiceRepeat = true
+            
+            print("\nChoice must be a number between 0-2.\n")
         }
     } while choiceRepeat
     
@@ -436,9 +480,13 @@ func shopScreen() {
             
             if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
                 buy = false
+                
+                print("\nYou must only input a number.\n")
             } else {
                 if (Int(temp)! < 0) {
                     buy = false
+                    
+                    print("\nInput may not be less than 0.\n")
                 } else {
                     buy = true
                 }
@@ -466,9 +514,13 @@ func shopScreen() {
             
             if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
                 buy = false
+                
+                print("\nYou must only input a number.\n")
             } else {
                 if (Int(temp)! < 0) {
                     buy = false
+                    
+                    print("\nInput may not be less than 0.\n")
                 } else {
                     buy = true
                 }
@@ -503,6 +555,10 @@ repeat {
     """, terminator: " ")
     
     start = readLine()!
+    
+    if (start != "") {
+        print("\nWrong Input! You must [return] to continue")
+    }
 } while start != ""
 
 var userName: String = ""
@@ -512,6 +568,12 @@ print()
 repeat {
     print("May I know your name, a young wizard? ", terminator: "")
     userName = readLine()!
+    
+    if (userName.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
+        print("\nYou must enter your name.\n")
+    } else {
+        print("\nName must only be characters, no symbols, numbers, and whitespaces allowed.\n")
+    }
 } while userName.trimmingCharacters(in: .whitespacesAndNewlines) == "" || (userName.range(of: "[^a-zA-Z]", options: .regularExpression) != nil)
 
 print("\nNice to meet you \(userName)!")
@@ -537,6 +599,12 @@ repeat {
         print("Your choice? ", terminator: "")
         
         mainChoice = readLine()!
+        
+        if ((mainChoice.lowercased() == "c" || mainChoice.lowercased() == "h" || mainChoice.lowercased() == "f" || mainChoice.lowercased() == "m" || mainChoice.lowercased() == "q" ||  mainChoice.lowercased() == "r" ||  mainChoice.lowercased() == "s") == false) {
+            print("\nPlease choose from the menu above.\n")
+        } else if (mainChoice.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+            print("\nChoice may not be empty.\n")
+        }
     } while (mainChoice.lowercased() == "c" || mainChoice.lowercased() == "h" || mainChoice.lowercased() == "f" || mainChoice.lowercased() == "m" || mainChoice.lowercased() == "q" ||  mainChoice.lowercased() == "r" ||  mainChoice.lowercased() == "s") == false
     
     if (mainChoice.lowercased() == "c") {
