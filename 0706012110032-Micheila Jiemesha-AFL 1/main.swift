@@ -19,8 +19,9 @@ let maxHP: Int = 100
 let maxMP: Int = 50
 var monsterHP: [Int] = [1000, 1000]
 var skillStack = Set<String>()
-var money: Int = 0
+var money: Double = 0
 let price = ["Potion": 35, "Elixir": 50]
+let actions = ["Physical Attack. No mana required. Deal 5pt of damage.", "Meteor. Use 15pt of MP. Deal 50pt of damage.", "Shield. Use 10pt of MP. Block enemy's attack in 1 turn.", "Use Potion to heal wound.", "Use Elixir to recover mana.", "Scan enemy's vital.", "Flee from battle."]
 
 // Functions
 // ==========================================================================================
@@ -33,17 +34,18 @@ func chooseAction() {
     ⚡️ Your MP: \(MP)
     💰 Your Money: \(money)
     
-    Choose your action:
-    [1] Physical Attack. No mana required. Deal 5pt of damage.
-    [2] Meteor. Use 15pt of MP. Deal 50pt of damage.
-    [3] Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
-    
-    [4] Use Potion to heal wound.
-    [5] Use Elixir to recover mana.
-    [6] Scan enemy's vital.
-    [7] Flee from battle.
-    
     """)
+    
+    var i = 0
+    
+    for action in actions {
+        print("[\(i + 1)] \(action)")
+        if (i == 3) {
+            print()
+        }
+        i += 1;
+    }
+    print()
 }
 
 //Function untuk Check Enemy's Vital
@@ -52,6 +54,7 @@ func enemyVital(monster: Int) {
     
     😈 Name: \(monsterName[monster]) x1
     😈 Health: \(monsterHP[monster])
+    
     """)
     
     returnToGoBack()
@@ -91,7 +94,7 @@ func returnToGoBack() {
         returnChoice = readLine()!
         
         if (returnChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-            print("\nWrong Input! You must [return] to continue")
+            print("\nWrong Input! You must [return] to continue\n")
         }
     } while returnChoice != ""
 }
@@ -170,7 +173,7 @@ func recoverManaScreen() {
                         manaChoice = readLine()!
                         
                         if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue")
+                            print("\nWrong Input! You must [return] to continue\n")
                         }
                     } while manaChoice != ""
                 } else {
@@ -182,7 +185,7 @@ func recoverManaScreen() {
                         manaChoice = readLine()!
                         
                         if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue")
+                            print("\nWrong Input! You must [return] to continue\n")
                         }
                     } while manaChoice != ""
                 }
@@ -253,7 +256,7 @@ func healingScreen() {
                         healingChoice = readLine()!
                         
                         if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue")
+                            print("\nWrong Input! You must [return] to continue\n")
                         }
                     } while healingChoice != ""
                 } else {
@@ -265,7 +268,7 @@ func healingScreen() {
                         healingChoice = readLine()!
                         
                         if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue")
+                            print("\nWrong Input! You must [return] to continue\n")
                         }
                     } while healingChoice != ""
                 }
@@ -358,7 +361,7 @@ func enemyAttack(monster: Int) {
         }
     }
     
-    let coins = Int.random(in: 1..<25)
+    let coins = Double(round(1000 * Double.random(in: 1..<25)) / 1000)
     money += coins
     
     print("\nYou gained \(coins) Coins.\n")
@@ -496,11 +499,13 @@ func shopScreen() {
         amount = Int(temp)!
         
         if (amount > 0) {
-            if (money >= (price["Potion"]! * amount)) {
+            if (money >= Double(price["Potion"]! * amount)) {
                 potions["Potion"]! += amount
-                money -= price["Potion"]! * amount
+                money -= Double(price["Potion"]! * amount)
             } else {
-                print("\nYour money is not enough.")
+                print("\nYour money is not enough.\n")
+                
+                returnToGoBack()
             }
         }
     case "2":
@@ -530,11 +535,13 @@ func shopScreen() {
         amount = Int(temp)!
         
         if (amount > 0) {
-            if (money >= (price["Elixir"]! * amount)) {
+            if (money >= Double(price["Elixir"]! * amount)) {
                 potions["Elixir"]! += amount
-                money -= price["Elixir"]! * amount
+                money -= Double(price["Elixir"]! * amount)
             } else {
-                print("\nYour money is not enough.")
+                print("\nYour money is not enough.\n")
+                
+                returnToGoBack()
             }
         }
     default:
@@ -557,7 +564,7 @@ repeat {
     start = readLine()!
     
     if (start != "") {
-        print("\nWrong Input! You must [return] to continue")
+        print("\nWrong Input! You must [return] to continue\n")
     }
 } while start != ""
 
