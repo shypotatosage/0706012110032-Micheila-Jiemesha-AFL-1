@@ -11,7 +11,6 @@ var start: String = ""
 var mainChoice: String = ""
 var HP: Int = 100
 var MP: Int = 50
-//var potion: Int = 20
 var elixir: Int = 5
 var potions = ["Potion": 20, "Elixir": 5]
 let monsterName: [String] = ["Troll", "Golem"]
@@ -648,7 +647,7 @@ repeat {
 } while mainChoice.lowercased() != "q" && HP > 0
 
 if (HP <= 0) {
-    print("\nToo bad, \(userName)... You have drained all your health and died as a hero in the hands of the monster 🥲")
+    print("\nToo bad, \(userName)... You have drained all your health and died as a hero in the hands of the monster 🥲\n")
 } else {
-    print("I guess this is the end. May we meet again, \(userName)!")
+    print("\nI guess this is the end. May we meet again, \(userName)!\n")
 }
