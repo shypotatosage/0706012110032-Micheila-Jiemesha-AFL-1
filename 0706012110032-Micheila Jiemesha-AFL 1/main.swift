@@ -7,6 +7,182 @@
 
 import Foundation
 
+class Item {
+    var name: String
+    var price: Int
+    var addStats: Int
+    var type: Int
+    
+    init(name: String, price: Int, addStats: Int, type: Int) {
+        self.name = name
+        self.price = price
+        self.addStats = addStats
+        self.type = type
+    }
+}
+
+class Potion: Item {
+    var owned: Int = 0
+    
+    init(name: String, price: Int, addStats: Int, type: Int, owned: Int) {
+        super.init(name: name, price: price, addStats: addStats, type: type)
+        self.owned = owned
+    }
+    
+    func buyPotion(amount: Int, money: Int) -> Int {
+        if ((amount * price) > money) {
+            print("\nYour money is not enough to buy \(amount) \(name)(s).\n")
+            
+            return 0
+        } else {
+            owned += amount
+            
+            return amount * price
+        }
+    }
+    
+    func usePotion() -> Int {
+        if (owned <= 0) {
+            print("\nYou don't have any \(name)s to use.\n")
+            
+            return 0
+        } else {
+            owned -= 1
+            
+            print("\nYou used 1 \(name).\n")
+            
+            return addStats
+        }
+    }
+}
+
+class Equipment: Item, Hashable, Equatable {
+    static func == (lhs: Equipment, rhs: Equipment) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+    
+    var breakingIn: Int = 0
+    var isBroken: Bool = false
+    
+    init(name: String, price: Int, addStats: Int, type: Int, breakingIn: Int) {
+        super.init(name: name, price: price, addStats: addStats, type: type)
+        self.breakingIn = breakingIn
+    }
+    
+    func use() -> Bool {
+        breakingIn -= 1
+        
+        if (breakingIn <= 0) {
+            isBroken = true
+        }
+        
+        return isBroken
+    }
+}
+
+struct Monster {
+    var HP: Int = 1000
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    func attack() -> Int {
+        return Int.random(in: 1..<5)
+    }
+}
+
+struct Action {
+    var name: String
+    var mp: Int
+    var points: Int
+    var type: Int
+    var description: String
+    
+    init(name: String, mp: Int, points: Int, type: Int, description: String) {
+        self.name = name
+        self.mp = mp
+        self.points = points
+        self.type = type
+        self.description = description
+    }
+}
+
+struct Player {
+    var name: String
+    var HP: Int = 100
+    var MP: Int = 50
+    var money: Int = 0
+    var elixir: Potion = Potion(name: "Elixir", price: 50, addStats: 10, type: 0, owned: 5)
+    var healthPotion: Potion = Potion(name: "Health Potion", price: 35, addStats: 20, type: 1, owned: 20)
+    var equipments: Set<Equipment> = Set<Equipment>()
+    var actions: [Action] = [Action]()
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    mutating func buyPotion(amount: Int, type: Int) {
+        if (type == 0) {
+            money -= elixir.buyPotion(amount: amount, money: self.money)
+        } else {
+            money -= healthPotion.buyPotion(amount: amount, money: self.money)
+        }
+    }
+    
+    mutating func usePotion(type: Int) {
+        if (type == 0) {
+            MP += elixir.usePotion()
+        } else {
+            HP +=  healthPotion.usePotion()
+        }
+    }
+    
+    mutating func buyEquipment(equipment: Equipment) {
+        if (equipment.price <= money) {
+            money -= equipment.price
+            equipments.insert(equipment)
+            print("\nYou successfully bought \(equipment.name) for \(equipment.price)!\n")
+        } else {
+            print("\nYou don't have enough money to buy \(equipment.name). You need \(equipment.price - money) more.\n")
+        }
+    }
+    
+    func showActions() {
+        var num = 0
+        
+        print("""
+        
+        ❤️ Your HP: \(HP)
+        ⚡️ Your MP: \(MP)
+        💰 Your Money: \(money)
+        
+        """)
+        
+        for action in actions {
+            print("[\(num + 1)] \(action.name)", terminator: " ")
+            
+            if (action.mp == 0) {
+                print("No mana required.", terminator: " ")
+            } else {
+                print("Use \(action.mp)pt of MP.", terminator: " ")
+            }
+            
+            print("\(action.description).")
+        }
+        
+        print("[\(num + 1)] Use Potion to heal wound.")
+        print("[\(num + 2)] Use Elixir to recover mana.")
+        print("[\(num + 3)] Scan enemy's vital.")
+        print("[\(num + 4)] Flee from battle.")
+    }
+}
+
 var start: String = ""
 var mainChoice: String = ""
 var HP: Int = 100
