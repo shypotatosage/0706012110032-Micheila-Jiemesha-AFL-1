@@ -7,181 +7,7 @@
 
 import Foundation
 
-class Item {
-    var name: String
-    var price: Int
-    var addStats: Int
-    var type: Int
-    
-    init(name: String, price: Int, addStats: Int, type: Int) {
-        self.name = name
-        self.price = price
-        self.addStats = addStats
-        self.type = type
-    }
-}
-
-class Potion: Item {
-    var owned: Int = 0
-    
-    init(name: String, price: Int, addStats: Int, type: Int, owned: Int) {
-        super.init(name: name, price: price, addStats: addStats, type: type)
-        self.owned = owned
-    }
-    
-    func buyPotion(amount: Int, money: Int) -> Int {
-        if ((amount * price) > money) {
-            print("\nYour money is not enough to buy \(amount) \(name)(s).\n")
-            
-            return 0
-        } else {
-            owned += amount
-            
-            return amount * price
-        }
-    }
-    
-    func usePotion() -> Int {
-        if (owned <= 0) {
-            print("\nYou don't have any \(name)s to use.\n")
-            
-            return 0
-        } else {
-            owned -= 1
-            
-            print("\nYou used 1 \(name).\n")
-            
-            return addStats
-        }
-    }
-}
-
-class Equipment: Item, Hashable, Equatable {
-    static func == (lhs: Equipment, rhs: Equipment) -> Bool {
-        return lhs.name == rhs.name
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
-    
-    var breakingIn: Int = 0
-    var isBroken: Bool = false
-    
-    init(name: String, price: Int, addStats: Int, type: Int, breakingIn: Int) {
-        super.init(name: name, price: price, addStats: addStats, type: type)
-        self.breakingIn = breakingIn
-    }
-    
-    func use() -> Bool {
-        breakingIn -= 1
-        
-        if (breakingIn <= 0) {
-            isBroken = true
-        }
-        
-        return isBroken
-    }
-}
-
-struct Monster {
-    var HP: Int = 1000
-    var name: String
-    
-    init(name: String) {
-        self.name = name
-    }
-    
-    func attack() -> Int {
-        return Int.random(in: 1..<5)
-    }
-}
-
-struct Action {
-    var name: String
-    var mp: Int
-    var points: Int
-    var type: Int
-    var description: String
-    
-    init(name: String, mp: Int, points: Int, type: Int, description: String) {
-        self.name = name
-        self.mp = mp
-        self.points = points
-        self.type = type
-        self.description = description
-    }
-}
-
-struct Player {
-    var name: String
-    var HP: Int = 100
-    var MP: Int = 50
-    var money: Int = 0
-    var elixir: Potion = Potion(name: "Elixir", price: 50, addStats: 10, type: 0, owned: 5)
-    var healthPotion: Potion = Potion(name: "Health Potion", price: 35, addStats: 20, type: 1, owned: 20)
-    var equipments: Set<Equipment> = Set<Equipment>()
-    var actions: [Action] = [Action]()
-    
-    init(name: String) {
-        self.name = name
-    }
-    
-    mutating func buyPotion(amount: Int, type: Int) {
-        if (type == 0) {
-            money -= elixir.buyPotion(amount: amount, money: self.money)
-        } else {
-            money -= healthPotion.buyPotion(amount: amount, money: self.money)
-        }
-    }
-    
-    mutating func usePotion(type: Int) {
-        if (type == 0) {
-            MP += elixir.usePotion()
-        } else {
-            HP +=  healthPotion.usePotion()
-        }
-    }
-    
-    mutating func buyEquipment(equipment: Equipment) {
-        if (equipment.price <= money) {
-            money -= equipment.price
-            equipments.insert(equipment)
-            print("\nYou successfully bought \(equipment.name) for \(equipment.price)!\n")
-        } else {
-            print("\nYou don't have enough money to buy \(equipment.name). You need \(equipment.price - money) more.\n")
-        }
-    }
-    
-    func showActions() {
-        var num = 0
-        
-        print("""
-        
-        ❤️ Your HP: \(HP)
-        ⚡️ Your MP: \(MP)
-        💰 Your Money: \(money)
-        
-        """)
-        
-        for action in actions {
-            print("[\(num + 1)] \(action.name)", terminator: " ")
-            
-            if (action.mp == 0) {
-                print("No mana required.", terminator: " ")
-            } else {
-                print("Use \(action.mp)pt of MP.", terminator: " ")
-            }
-            
-            print("\(action.description).")
-        }
-        
-        print("[\(num + 1)] Use Potion to heal wound.")
-        print("[\(num + 2)] Use Elixir to recover mana.")
-        print("[\(num + 3)] Scan enemy's vital.")
-        print("[\(num + 4)] Flee from battle.")
-    }
-}
+var player: Player
 
 var start: String = ""
 var mainChoice: String = ""
@@ -198,37 +24,17 @@ var money: Double = 0
 let price = ["Potion": 35, "Elixir": 50]
 let actions = ["Physical Attack. No mana required. Deal 5pt of damage.", "Meteor. Use 15pt of MP. Deal 50pt of damage.", "Shield. Use 10pt of MP. Block enemy's attack in 1 turn.", "Use Potion to heal wound.", "Use Elixir to recover mana.", "Scan enemy's vital.", "Flee from battle."]
 
+
+
 // Functions
 // ==========================================================================================
 
-// Function untuk Action Menu dalam Forest/Mountain
-func chooseAction() {
-    print("""
-    
-    ❤️ Your HP: \(HP)
-    ⚡️ Your MP: \(MP)
-    💰 Your Money: \(money)
-    
-    """)
-    
-    var i = 0
-    
-    for action in actions {
-        print("[\(i + 1)] \(action)")
-        if (i == 3) {
-            print()
-        }
-        i += 1;
-    }
-    print()
-}
-
 //Function untuk Check Enemy's Vital
-func enemyVital(monster: Int) {
+func enemyVital() {
     print("""
     
-    😈 Name: \(monsterName[monster]) x1
-    😈 Health: \(monsterHP[monster])
+    😈 Name: \(player.monster!.name) x1
+    😈 Health: \(player.monster!.HP)
     
     """)
     
@@ -239,24 +45,7 @@ func enemyVital(monster: Int) {
 func monsterScreenPrint(monster: Int) {
     print("")
     
-    if (monster == 0) {
-        print("""
-        As you enter the forest, you feel a sense of unease wash over you.
-        Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
-        
-        """)
-    } else {
-        print("""
-        As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
-        
-        """)
-    }
-    
-    print("""
-    😈 Name: \(monsterName[monster]) x1
-    😈 Health: \(monsterHP[monster])
-    
-    """)
+    enemyVital()
 }
 
 //Function untuk mempersingkat Return To Go Back karena dipakai berulang kali
@@ -553,8 +342,6 @@ func monsterAttackScreen(monster: Int) {
         if turn % 2 == 0 {
             var choiceRepeat: Bool = false
             
-            chooseAction()
-            
             repeat {
                 print("Your choice? ", terminator: "")
                 choice = readLine()!
@@ -586,7 +373,7 @@ func monsterAttackScreen(monster: Int) {
             case "5":
                 recoverManaScreen()
             case "6":
-                enemyVital(monster: monster)
+                player.monsterEncounter()
             case "7":
                 print("""
                 
@@ -759,6 +546,8 @@ repeat {
 } while userName.trimmingCharacters(in: .whitespacesAndNewlines) == "" || (userName.range(of: "[^a-zA-Z]", options: .regularExpression) != nil)
 
 print("\nNice to meet you \(userName)!")
+
+player = Player(name: userName)
 
 repeat {
     print("\nFrom here, you can...")

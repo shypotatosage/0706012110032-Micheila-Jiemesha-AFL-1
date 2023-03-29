@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		04230B8E29AD9DF200A447D4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04230B8D29AD9DF200A447D4 /* main.swift */; };
+		0436E3C729D28C860095A1AA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3C629D28C860095A1AA /* Item.swift */; };
+		0436E3CB29D28CB00095A1AA /* Equipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3CA29D28CB00095A1AA /* Equipment.swift */; };
+		0436E3CD29D28CDB0095A1AA /* Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3CC29D28CDB0095A1AA /* Potion.swift */; };
+		0436E3CF29D28CF20095A1AA /* Monster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3CE29D28CF20095A1AA /* Monster.swift */; };
+		0436E3D129D28D0A0095A1AA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3D029D28D0A0095A1AA /* Action.swift */; };
+		0436E3D329D28D2F0095A1AA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3D229D28D2F0095A1AA /* Player.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +31,12 @@
 /* Begin PBXFileReference section */
 		04230B8A29AD9DF200A447D4 /* 0706012110032-Micheila Jiemesha-AFL 1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "0706012110032-Micheila Jiemesha-AFL 1"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04230B8D29AD9DF200A447D4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		0436E3C629D28C860095A1AA /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		0436E3CA29D28CB00095A1AA /* Equipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Equipment.swift; sourceTree = "<group>"; };
+		0436E3CC29D28CDB0095A1AA /* Potion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Potion.swift; sourceTree = "<group>"; };
+		0436E3CE29D28CF20095A1AA /* Monster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monster.swift; sourceTree = "<group>"; };
+		0436E3D029D28D0A0095A1AA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		0436E3D229D28D2F0095A1AA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +69,23 @@
 		04230B8C29AD9DF200A447D4 /* 0706012110032-Micheila Jiemesha-AFL 1 */ = {
 			isa = PBXGroup;
 			children = (
+				0436E3D429D28D3F0095A1AA /* Model */,
 				04230B8D29AD9DF200A447D4 /* main.swift */,
 			);
 			path = "0706012110032-Micheila Jiemesha-AFL 1";
+			sourceTree = "<group>";
+		};
+		0436E3D429D28D3F0095A1AA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0436E3C629D28C860095A1AA /* Item.swift */,
+				0436E3CA29D28CB00095A1AA /* Equipment.swift */,
+				0436E3CC29D28CDB0095A1AA /* Potion.swift */,
+				0436E3CE29D28CF20095A1AA /* Monster.swift */,
+				0436E3D029D28D0A0095A1AA /* Action.swift */,
+				0436E3D229D28D2F0095A1AA /* Player.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,7 +146,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0436E3CF29D28CF20095A1AA /* Monster.swift in Sources */,
+				0436E3D129D28D0A0095A1AA /* Action.swift in Sources */,
+				0436E3CD29D28CDB0095A1AA /* Potion.swift in Sources */,
+				0436E3C729D28C860095A1AA /* Item.swift in Sources */,
+				0436E3D329D28D2F0095A1AA /* Player.swift in Sources */,
 				04230B8E29AD9DF200A447D4 /* main.swift in Sources */,
+				0436E3CB29D28CB00095A1AA /* Equipment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
