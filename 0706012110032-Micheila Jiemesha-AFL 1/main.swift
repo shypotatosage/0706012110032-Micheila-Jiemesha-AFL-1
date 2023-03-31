@@ -17,21 +17,6 @@ var monster: Monster = Monster(name: "")
 // Functions
 // ==========================================================================================
 
-//Function untuk mempersingkat Return To Go Back karena dipakai berulang kali
-func returnToGoBack() {
-    var returnChoice: String = ""
-    
-    repeat {
-        print("Press [return] to go back: ", terminator: "")
-        
-        returnChoice = readLine()!
-        
-        if (returnChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-            print("\nWrong Input! You must [return] to continue\n")
-        }
-    } while returnChoice != ""
-}
-
 //Function untuk menampilkan layar saat memasuki shop
 func shopScreen() {
     var choice: String = ""
@@ -237,7 +222,7 @@ func monsterEncounter() {
             
             """)
             
-            returnToGoBack()
+            player.returnToGoBack()
         } else {
             print("""
             
@@ -248,7 +233,7 @@ func monsterEncounter() {
             
             """)
             
-            returnToGoBack()
+            player.returnToGoBack()
         }
     } while (choice != String(numberOfChoicesOfAction) && player.HP > 0)
 }
