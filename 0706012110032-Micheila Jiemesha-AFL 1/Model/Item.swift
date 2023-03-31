@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Parent Class Untuk Equipment dan Potion
 class Item {
     var name: String
     var price: Int
@@ -15,6 +16,7 @@ class Item {
     var type: Int
     var description: String
     
+    // Initializer
     init(name: String, price: Int, addStats: Int, type: Int, description: String) {
         self.name = name
         self.price = price

@@ -17,7 +17,7 @@ var monster: Monster = Monster(name: "")
 // Functions
 // ==========================================================================================
 
-//Function untuk menampilkan layar saat memasuki shop
+//Function Untuk Menampilkan Layar Saat Memasuki Shop
 func shopScreen() {
     var choice: String = ""
     var choiceRepeat: Bool = false
@@ -107,6 +107,7 @@ func shopScreen() {
     
 }
 
+// Function Tampilan Ketika User Masuk Ke Forest/Mountain
 func monsterEncounter() {
     print()
     
@@ -306,25 +307,6 @@ repeat {
     } while (mainChoice.lowercased() == "c" || mainChoice.lowercased() == "h" || mainChoice.lowercased() == "f" || mainChoice.lowercased() == "m" || mainChoice.lowercased() == "q" ||  mainChoice.lowercased() == "r" ||  mainChoice.lowercased() == "s") == false
     
     if (mainChoice.lowercased() == "c") {
-//        print("""
-//        Player Name: \(userName)
-//
-//        HP: \(HP)/100
-//        MP: \(MP)/50
-//        Money: \(money)
-//
-//        Magic:
-//        - Physical Attack. No mana required. Deal 5pt of damage.
-//        - Meteor. Use 15pt of MP. Deal 50pt of damage.
-//        - Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
-//
-//        Items:
-//        - Potion x\(potions["Potion"]!). Heal 20pt of your HP
-//        - Elixir x\(elixir). Add 10pt of your MP.
-//
-//        """)
-//
-//        returnToGoBack()
         player.showStats()
     } else if (mainChoice.lowercased() == "h") {
         player.healingScreen()

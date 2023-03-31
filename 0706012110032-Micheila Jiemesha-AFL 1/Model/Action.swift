@@ -16,6 +16,7 @@ struct Action {
     var description: String
     var messageAfterUsed: String
     
+    // Initializer
     init(name: String, mp: Int, points: Int, type: Int, description: String, messageAfterUsed: String) {
         self.name = name
         self.mp = mp

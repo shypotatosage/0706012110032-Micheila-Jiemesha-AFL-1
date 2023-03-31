@@ -15,6 +15,7 @@ class Potion: Item {
         self.owned = owned
     }
     
+    // Function Ketika User Memilih Untuk Membeli Health Potion/Elixir
     func buyPotion(amount: Int, money: Int) -> Int {
         if ((amount * price) > money) {
             print("\nYour money is not enough to buy \(amount) \(name)", terminator: "")
@@ -49,6 +50,7 @@ class Potion: Item {
         }
     }
     
+    // Function Ketika User Memilih Untuk Menggunakan Health Potion/Elixir
     func usePotion() -> Int {
         if (owned <= 0) {
             print("\nYou don't have any \(name)s to use.\n")

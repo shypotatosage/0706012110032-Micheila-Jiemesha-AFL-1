@@ -18,6 +18,7 @@ class Player {
     var actions: [Action] = [Action]()
     var skillStack: [String] = []
     
+    // Initializer
     init(name: String) {
         self.name = name
         actions.append(Action(name: "Physical Attack", mp: 0, points: 5, type: 0, description: "Deal 5pt of damage.", messageAfterUsed: "\n*Slash*\nYou have dealt 5 damage to your enemy."))
@@ -25,6 +26,7 @@ class Player {
         actions.append(Action(name: "Shield", mp: 10, points: 1, type: 1, description: "Block enemy's attack in 1 turn.", messageAfterUsed: "\n*Shriiing*\nYou have used 'Shield' skill which consumed 10 MP and will protect you from the enemy's attack for 1 turn."))
     }
     
+    // Menghitung Bonus HP Dari Equipments Yang Dimiliki User
     func equipmentHPBonus() -> Int {
         var HPBonus: Int = 0
         
@@ -37,6 +39,7 @@ class Player {
         return HPBonus
     }
     
+    // Menghitung Bonus MP Dari Equipments Yang Dimiliki User
     func equipmentMPBonus() -> Int {
         var MPBonus: Int = 0
         
@@ -49,6 +52,7 @@ class Player {
         return MPBonus
     }
     
+    // Menghitung Bonus Attack Dari Equipments Yang Dimiliki User
     func equipmentAttackBonus() -> Int {
         var AttackBonus: Int = 0
         
@@ -61,6 +65,7 @@ class Player {
         return AttackBonus
     }
     
+    // Function Ketika User Memilih Untuk Membeli Health Potion/Elixir
     func buyPotion(amount: Int, type: Int) {
         if (type == 0) {
             money -= elixir.buyPotion(amount: amount, money: self.money)
@@ -69,6 +74,7 @@ class Player {
         }
     }
     
+    // Function Ketika User Memilih Untuk Menggunakan Health Potion/Elixir
     func usePotion(type: Int) {
         if (type == 0) {
             MP += elixir.usePotion()
@@ -85,7 +91,9 @@ class Player {
         }
     }
     
+    // Function Ketika User Memilih Untuk Membeli Equipment
     func buyEquipment(equipment: Equipment) {
+        // Player Tidak Bisa Memiliki 2 Equipment Yang Sama
         if (equipments.contains(equipment)) {
             print("\nYou already own this \(equipment.name)!\n")
         } else {
@@ -105,6 +113,7 @@ class Player {
         }
     }
     
+    // Function Untuk Mempersingkat Coding Karena Banyak Penggunaan Return To Go Back
     func returnToGoBack() {
         var returnChoice: String = ""
         
@@ -119,6 +128,7 @@ class Player {
         } while returnChoice != ""
     }
     
+    // Function Ketika User Memilih Untuk Melihat Statsnya
     func showStats() {
         print("""
         
@@ -160,6 +170,7 @@ class Player {
         returnToGoBack()
     }
     
+    // Function Tampilan Ketika User Memilih Untuk Masuk Ke Menu Heal
     func healingScreen() {
         var healingChoice: String = ""
         
@@ -242,6 +253,7 @@ class Player {
         }
     }
     
+    // Function Tampilan Ketika User Memilih Untuk Masuk Ke Menu Recover Mana
     func recoverManaScreen() {
         var manaChoice: String = ""
         
@@ -324,6 +336,7 @@ class Player {
         }
     }
     
+    // Function Ketika User Memilih Untuk Menyerang/Menggunakan Skillnya Ke Enemy
     func useAction(actionIndex: Int) -> Int {
         print(actions[actionIndex].messageAfterUsed)
         

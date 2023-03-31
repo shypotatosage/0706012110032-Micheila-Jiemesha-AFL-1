@@ -15,6 +15,7 @@ struct Monster {
         self.name = name
     }
     
+    // Function Serangan Balik Dari Enemy Ketika User Melakukan Serangan Ke Enemy
     func attack(shielded: Bool) -> Int {
         if (!shielded) {
             let damage: Int = Int.random(in: 1..<5)
@@ -27,13 +28,6 @@ struct Monster {
             
             return damage
         } else {
-            print("""
-            
-            *Shriiing!*
-            You have used 'Shield' skill which consumed 10 MP and will protect you from the \(name)s attack for 1 turn.
-            
-            """)
-            
             return 0
         }
     }
