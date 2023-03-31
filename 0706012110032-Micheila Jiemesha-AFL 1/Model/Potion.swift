@@ -20,10 +20,12 @@ class Potion: Item {
             print("\nYour money is not enough to buy \(amount) \(name)", terminator: "")
             
             if (amount > 1) {
-                print("s.")
+                print("s.", terminator: " ")
             } else {
-                print(".")
+                print(".", terminator: " ")
             }
+            
+            print("You need \((amount * price) - money) more.\n")
             
             return 0
         } else if (amount > 0) {

@@ -26,6 +26,42 @@ class Player {
         actions.append(Action(name: "Shield", mp: 10, points: 1, type: 1, description: "Block enemy's attack in 1 turn.", messageAfterUsed: "\n*Shriiing*\nYou have used 'Shield' skill which consumed 10 MP and will protect you from the enemy's attack for 1 turn."))
     }
     
+    func equipmentHPBonus() -> Int {
+        var HPBonus: Int = 0
+        
+        for equipment in equipments {
+            if (equipment.type == 1) {
+                HPBonus += equipment.addStats
+            }
+        }
+        
+        return HPBonus
+    }
+    
+    func equipmentMPBonus() -> Int {
+        var MPBonus: Int = 0
+        
+        for equipment in equipments {
+            if (equipment.type == 0) {
+                MPBonus += equipment.addStats
+            }
+        }
+        
+        return MPBonus
+    }
+    
+    func equipmentAttackBonus() -> Int {
+        var AttackBonus: Int = 0
+        
+        for equipment in equipments {
+            if (equipment.type == 2) {
+                AttackBonus += equipment.addStats
+            }
+        }
+        
+        return AttackBonus
+    }
+    
     func buyPotion(amount: Int, type: Int) {
         if (type == 0) {
             money -= elixir.buyPotion(amount: amount, money: self.money)
@@ -38,14 +74,14 @@ class Player {
         if (type == 0) {
             MP += elixir.usePotion()
             
-            if (MP > 50) {
-                MP = 50
+            if (MP > 50 + equipmentMPBonus()) {
+                MP = 50 + equipmentMPBonus()
             }
         } else {
             HP +=  healthPotion.usePotion()
             
-            if (HP > 100) {
-                HP = 100
+            if (HP > 100 + equipmentHPBonus()) {
+                HP = 100 + equipmentHPBonus()
             }
         }
     }
@@ -58,6 +94,12 @@ class Player {
                 money -= equipment.price
                 equipments.insert(equipment)
                 print("\nYou successfully bought \(equipment.name) for \(equipment.price)!\n")
+                
+                if (equipment.type == 0) {
+                    MP += equipment.addStats
+                } else if (equipment.type == 1) {
+                    HP += equipment.addStats
+                }
             } else {
                 print("\nYou don't have enough money to buy \(equipment.name). You need \(equipment.price - money) more.\n")
             }
@@ -83,9 +125,10 @@ class Player {
         
         Player Name: \(name)
         
-        HP: \(HP)/100
-        MP: \(MP)/50
+        HP: \(HP)/\(100 + equipmentHPBonus())
+        MP: \(MP)/\(50 + equipmentMPBonus())
         Money: \(money)
+        Bonus Attack: \(equipmentAttackBonus())
         
         Magic:
         """)
@@ -110,7 +153,7 @@ class Player {
         """)
         
         for equipment in equipments {
-            print("- \(equipment.name). \(equipment.description)")
+            print("- \(equipment.name). \(equipment.description) Breaks In \(equipment.breaksIn - equipment.timesUsed) turns.")
         }
         
         print()
@@ -121,7 +164,7 @@ class Player {
     func healingScreen() {
         var healingChoice: String = ""
         
-        if healthPotion.owned > 0 && HP < 100 {
+        if healthPotion.owned > 0 && HP < 100 + equipmentHPBonus() {
             print("""
             \nYour HP is \(HP).
             You have \(healthPotion.owned) Potions.
@@ -142,7 +185,7 @@ class Player {
                 usePotion(type: 1)
                 
                 repeat {
-                    if healthPotion.owned > 0 && HP < 100 {
+                    if healthPotion.owned > 0 && HP < 100 + equipmentHPBonus() {
                         print("""
                         \nYour HP is \(HP) now.
                         You have \(healthPotion.owned) Potions left.
@@ -203,7 +246,7 @@ class Player {
     func recoverManaScreen() {
         var manaChoice: String = ""
         
-        if elixir.owned > 0 && MP < 50 {
+        if elixir.owned > 0 && MP < 50 + equipmentMPBonus() {
             print("""
             \nYour MP is \(MP).
             You have \(elixir.owned) Elixirs.
@@ -224,7 +267,7 @@ class Player {
                 usePotion(type: 0)
                 
                 repeat {
-                    if elixir.owned > 0 && MP < 50 {
+                    if elixir.owned > 0 && MP < 50 + equipmentMPBonus() {
                         print("""
                         \nYour MP is \(MP) now.
                         You have \(elixir.owned) Elixirs left.
@@ -257,7 +300,7 @@ class Player {
                             }
                         } while manaChoice != ""
                     } else {
-                        print("\nYour mana is already maxed.")
+                        print("\nYour mana is already maxed.\n")
                         
                         repeat {
                             print("Press [return] to go back: ", terminator: "")
@@ -276,7 +319,7 @@ class Player {
             
             returnToGoBack()
         } else {
-            print("\nYour mana is already maxed.")
+            print("\nYour mana is already maxed.\n")
             
             returnToGoBack()
         }
@@ -290,7 +333,7 @@ class Player {
                 skillStack.append("Shield")
             }
         } else {
-            monster?.HP -= actions[actionIndex].points
+            monster?.HP -= actions[actionIndex].points  + equipmentAttackBonus()
             MP -= actions[actionIndex].mp
         }
     }
@@ -350,7 +393,7 @@ class Player {
                 print("Your choice? ", terminator: "")
                 choice = readLine()!
                 
-                if (choice.range(of: "[^1-" + String(numberOfChoicesOfAction) + "]", options: .regularExpression) == nil) {
+                if (choice.range(of: "[^1-" + String(numberOfChoicesOfAction) + "]", options: .regularExpression) == nil && choice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
                     if (Int(choice)! < 1 || Int(choice)! > numberOfChoicesOfAction) {
                         choiceRepeat = true
                         
@@ -374,6 +417,30 @@ class Player {
                 } else {
                     HP -= monster!.attack(shielded: false)
                 }
+                
+                for equipment in equipments {
+                    let isBroken = equipment.use()
+                    
+                    if (isBroken) {
+                        print("Your \(equipment.name) has broken.\n")
+                        equipment.timesUsed = 0
+                        equipment.isBroken = false
+                        equipments.remove(at: equipments.firstIndex(of: equipment)!)
+                    }
+                }
+                
+                if (HP > 100 + equipmentHPBonus()) {
+                    HP = 100 + equipmentHPBonus()
+                }
+                
+                if (MP > 50 + equipmentMPBonus()) {
+                    MP = 50 + equipmentMPBonus()
+                }
+                
+                let coinsDropped: Int = Int.random(in: 10..<25)
+                money += coinsDropped
+                
+                print("You gained \(coinsDropped) coins.\n")
             } else if (Int(choice) == actionIndex + 1) {
                 healingScreen()
             } else if (Int(choice) == actionIndex + 2) {

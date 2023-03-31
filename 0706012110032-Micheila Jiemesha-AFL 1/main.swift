@@ -11,19 +11,7 @@ var player: Player = Player(name: "")
 
 var start: String = ""
 var mainChoice: String = ""
-var HP: Int = 100
-var MP: Int = 50
-var elixir: Int = 5
-var potions = ["Potion": 20, "Elixir": 5]
-let monsterName: [String] = ["Troll", "Golem"]
-let maxHP: Int = 100
-let maxMP: Int = 50
-var monsterHP: [Int] = [1000, 1000]
-var skillStack = Set<String>()
-var money: Double = 0
-let price = ["Potion": 35, "Elixir": 50]
-let actions = ["Physical Attack. No mana required. Deal 5pt of damage.", "Meteor. Use 15pt of MP. Deal 50pt of damage.", "Shield. Use 10pt of MP. Block enemy's attack in 1 turn.", "Use Potion to heal wound.", "Use Elixir to recover mana.", "Scan enemy's vital.", "Flee from battle."]
-var shopEquipments: [Equipment] = [Equipment(name: "Elven Shoes", price: 100, addStats: 20, type: 1, breakingIn: 10, description: "Adds 20 HP to your stats. Breaks in 10 turns."), Equipment(name: "Kings Gauntlet", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats. Breaks in 5 turns."), Equipment(name: "Bloodvine", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats. Breaks in 5 turns.")]
+var shopEquipments: [Equipment] = [Equipment(name: "Elven Shoes", price: 100, addStats: 20, type: 1, breakingIn: 10, description: "Adds 20 HP to your stats."), Equipment(name: "Kings Gauntlet", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats."), Equipment(name: "Bloodvine", price: 150, addStats: 15, type: 0, breakingIn: 7, description: "Adds 15 MP to your stats.")]
 
 // Functions
 // ==========================================================================================
@@ -48,12 +36,14 @@ func shopScreen() {
     var choice: String = ""
     var choiceRepeat: Bool = false
     
-    var shopIndex: Int = 0
-    let numberOfChoicesInShop: Int = shopEquipments.count + 2
-    
     repeat {
+        var shopIndex: Int = 0
+        let numberOfChoicesInShop: Int = shopEquipments.count + 2
+        
         print("""
         Welcome to the shop! ✨ Here you can buy potions such as elixir and potion to help you during your journey.
+        
+        💰 Your Money: \(player.money)
         
         [0] Back
         """)
@@ -67,13 +57,7 @@ func shopScreen() {
                 print("(\(equipment.price) Coins).", terminator: " ")
             }
             
-            if (equipment.type == 0) {
-                print("Increases player MP by \(equipment.addStats).", terminator: " ")
-            } else {
-                print("", terminator: " ")
-            }
-            
-            print("\(equipment.description).")
+            print("\(equipment.description) Breaks In \(equipment.breaksIn) turns.")
             
             shopIndex += 1
         }
@@ -88,7 +72,7 @@ func shopScreen() {
             print("Your choice? ", terminator: "")
             choice = readLine()!
             
-            if (choice.range(of: "[^0-" + String(numberOfChoicesInShop) + "]", options: .regularExpression) == nil) {
+            if (choice.range(of: "[^0-" + String(numberOfChoicesInShop) + "]", options: .regularExpression) == nil && choice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
                 if (Int(choice)! < 0 || Int(choice)! > numberOfChoicesInShop) {
                     choiceRepeat = true
                     
@@ -130,7 +114,7 @@ func shopScreen() {
             amount = Int(temp)!
             
             player.buyPotion(amount: amount, type: Int(choice)! - shopIndex - 1)
-        } else {
+        } else if (Int(choice) != 0) {
             player.buyEquipment(equipment: shopEquipments[Int(choice)! - 1])
         }
     } while (choice != "0")
@@ -240,8 +224,8 @@ repeat {
     }
 } while mainChoice.lowercased() != "q" && player.HP > 0
 
-if (HP <= 0) {
-    print("\nToo bad, \(userName)... You have drained all your health and died as a hero in the hands of the monster 🥲\n")
+if (player.HP <= 0) {
+    print("\nToo bad, \(player.name)... You have drained all your health and died as a hero in the hands of the monster 🥲\n")
 } else {
-    print("\nI guess this is the end. May we meet again, \(userName)!\n")
+    print("\nI guess this is the end. May we meet again, \(player.name)!\n")
 }

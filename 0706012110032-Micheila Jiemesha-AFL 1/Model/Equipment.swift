@@ -16,18 +16,19 @@ class Equipment: Item, Hashable, Equatable {
         hasher.combine(name)
     }
     
-    var breakingIn: Int = 0
+    var breaksIn: Int = 0
     var isBroken: Bool = false
+    var timesUsed: Int = 0
     
     init(name: String, price: Int, addStats: Int, type: Int, breakingIn: Int, description: String) {
         super.init(name: name, price: price, addStats: addStats, type: type, description: description)
-        self.breakingIn = breakingIn
+        self.breaksIn = breakingIn
     }
     
     func use() -> Bool {
-        breakingIn -= 1
+        timesUsed += 1
         
-        if (breakingIn <= 0) {
+        if (timesUsed == breaksIn) {
             isBroken = true
         }
         
