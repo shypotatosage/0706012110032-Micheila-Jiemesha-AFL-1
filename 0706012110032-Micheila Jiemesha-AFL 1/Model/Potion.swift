@@ -17,13 +17,33 @@ class Potion: Item {
     
     func buyPotion(amount: Int, money: Int) -> Int {
         if ((amount * price) > money) {
-            print("\nYour money is not enough to buy \(amount) \(name)(s).\n")
+            print("\nYour money is not enough to buy \(amount) \(name)", terminator: "")
+            
+            if (amount > 1) {
+                print("s.")
+            } else {
+                print(".")
+            }
             
             return 0
-        } else {
+        } else if (amount > 0) {
             owned += amount
             
+            print("\nYou managed to buy \(amount) \(name)", terminator: "")
+            
+            if (amount > 1) {
+                print("s.", terminator: " ")
+            } else {
+                print(".", terminator: " ")
+            }
+            
+            print("Now you have \(owned).")
+            
             return amount * price
+        } else {
+            print("\nYou didn't buy any \(name).\n")
+            
+            return 0
         }
     }
     

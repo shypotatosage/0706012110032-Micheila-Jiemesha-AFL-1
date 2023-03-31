@@ -7,7 +7,7 @@
 
 import Foundation
 
-var player: Player
+var player: Player = Player(name: "")
 
 var start: String = ""
 var mainChoice: String = ""
@@ -23,30 +23,10 @@ var skillStack = Set<String>()
 var money: Double = 0
 let price = ["Potion": 35, "Elixir": 50]
 let actions = ["Physical Attack. No mana required. Deal 5pt of damage.", "Meteor. Use 15pt of MP. Deal 50pt of damage.", "Shield. Use 10pt of MP. Block enemy's attack in 1 turn.", "Use Potion to heal wound.", "Use Elixir to recover mana.", "Scan enemy's vital.", "Flee from battle."]
-
-
+var shopEquipments: [Equipment] = [Equipment(name: "Elven Shoes", price: 100, addStats: 20, type: 1, breakingIn: 10, description: "Adds 20 HP to your stats. Breaks in 10 turns."), Equipment(name: "Kings Gauntlet", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats. Breaks in 5 turns."), Equipment(name: "Bloodvine", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats. Breaks in 5 turns.")]
 
 // Functions
 // ==========================================================================================
-
-//Function untuk Check Enemy's Vital
-func enemyVital() {
-    print("""
-    
-    😈 Name: \(player.monster!.name) x1
-    😈 Health: \(player.monster!.HP)
-    
-    """)
-    
-    returnToGoBack()
-}
-
-//Function untuk printing saat pertama kali masuk Forest/Mountain
-func monsterScreenPrint(monster: Int) {
-    print("")
-    
-    enemyVital()
-}
 
 //Function untuk mempersingkat Return To Go Back karena dipakai berulang kali
 func returnToGoBack() {
@@ -63,452 +43,98 @@ func returnToGoBack() {
     } while returnChoice != ""
 }
 
-//Function untuk menjalankan proses healing
-func healing() {
-    HP += 20
-    potions["Potion"]! -= 1
-    
-    if (HP > maxHP) {
-        HP = maxHP
-    }
-}
-
-//Function untuk menjalankan proses recover mana
-func recoverMana() {
-    MP += 10
-    potions["Elixir"]! -= 1
-    
-    if (MP > maxMP) {
-        MP = maxMP
-    }
-}
-
-//Function untuk menampilkan layar recover mana karena ada dipakai 2 kali, di home dan ketika melawan monster
-func recoverManaScreen() {
-    var manaChoice: String = ""
-    
-    if potions["Elixir"]! > 0 && MP < maxMP {
-        print("""
-        \nYour MP is \(MP).
-        You have \(potions["Elixir"]!) Elixirs.
-        
-        """)
-        
-        repeat {
-            print("Are you sure you want to use 1 elixir to recover mana? [Y/N] ", terminator: "")
-            
-            manaChoice = readLine()!
-            
-            if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
-                print("\nYou must only choose between Y (Yes) or N (No).\n")
-            }
-        } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
-        
-        if (manaChoice.lowercased() == "y") {
-            recoverMana()
-            
-            repeat {
-                if potions["Elixir"]! > 0 && MP < maxMP {
-                    print("""
-                    \nYour MP is \(MP) now.
-                    You have \(potions["Elixir"]!) Elixirs left.
-                    
-                    """)
-                    
-                    repeat {
-                        print("Still want to use 1 elixir to recover mana again? [Y/N] ", terminator: "")
-                        
-                        manaChoice = readLine()!
-                        
-                        if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
-                            print("\nYou must only choose between Y (Yes) or N (No).\n")
-                        }
-                    } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
-                    
-                    if (manaChoice.lowercased() == "y") {
-                        recoverMana()
-                    }
-                } else if potions["Elixir"]! < 0 {
-                    print("\nYou don't have any elixir left. Be careful of your next journey.")
-                    
-                    repeat {
-                        print("Press [return] to go back: ", terminator: "")
-                        
-                        manaChoice = readLine()!
-                        
-                        if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue\n")
-                        }
-                    } while manaChoice != ""
-                } else {
-                    print("\nYour mana is already maxed.")
-                    
-                    repeat {
-                        print("Press [return] to go back: ", terminator: "")
-                        
-                        manaChoice = readLine()!
-                        
-                        if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue\n")
-                        }
-                    } while manaChoice != ""
-                }
-            } while manaChoice.lowercased() != "n" && manaChoice != ""
-        }
-    } else if potions["Elixir"]! < 0 {
-        print("\nYou don't have any elixir left. Be careful of your next journey.")
-        
-        returnToGoBack()
-    } else {
-        print("\nYour mana is already maxed.")
-        
-        returnToGoBack()
-    }
-}
-
-//Function untuk menampilkan layar healing karena ditampilkan 2 kali, di home dan ketika melawan monster
-func healingScreen() {
-    var healingChoice: String = ""
-    
-    if potions["Potion"]! > 0 && HP < maxHP {
-        print("""
-        \nYour HP is \(HP).
-        You have \(potions["Potion"]!) Potions.
-        
-        """)
-        
-        repeat {
-            print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
-            
-            healingChoice = readLine()!
-            
-            if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
-                print("\nYou must only choose between Y (Yes) or N (No).\n")
-            }
-        } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
-        
-        if (healingChoice.lowercased() == "y") {
-            healing()
-            
-            repeat {
-                if potions["Potion"]! > 0 && HP < maxHP {
-                    print("""
-                    \nYour HP is \(HP) now.
-                    You have \(potions["Potion"]!) Potions left.
-                    
-                    """)
-                    
-                    repeat {
-                        print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
-                        
-                        healingChoice = readLine()!
-                        
-                        if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
-                            print("\nYou must only choose between Y (Yes) or N (No).\n")
-                        }
-                    } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
-                    
-                    if (healingChoice.lowercased() == "y") {
-                        healing()
-                    }
-                } else if potions["Potion"]! < 0 {
-                    print("\nYou don't have any potion left. Be careful of your next journey.\n")
-                    
-                    repeat {
-                        print("Press [return] to go back: ", terminator: "")
-                        
-                        healingChoice = readLine()!
-                        
-                        if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue\n")
-                        }
-                    } while healingChoice != ""
-                } else {
-                    print("\nYour health is already maxed.\n")
-                    
-                    repeat {
-                        print("Press [return] to go back: ", terminator: "")
-                        
-                        healingChoice = readLine()!
-                        
-                        if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                            print("\nWrong Input! You must [return] to continue\n")
-                        }
-                    } while healingChoice != ""
-                }
-            } while healingChoice.lowercased() != "n" && healingChoice != ""
-        }
-    } else if potions["Potion"]! < 0 {
-        print("\nYou don't have any potion left. Be careful of your next journey.\n")
-        
-        returnToGoBack()
-    } else {
-        print("\nYour health is already maxed.\n")
-        
-        returnToGoBack()
-    }
-}
-
-//Function ketika player memilih Physical Attack saat melawan monster
-func physicalAttack(monster: Int) {
-    monsterHP[monster] -= 5
-    
-    print("\n*Kapowwww*")
-    print("You have dealt 5 damage to the \(monsterName[monster])\n")
-}
-
-//Function ketika player memilih Meteor saat melawan monster
-func meteor(monster: Int) {
-    if (MP < 15) {
-        print("""
-        
-        You don't have enough MP to use this skill.
-        
-        """)
-    } else {
-        MP -= 15
-        monsterHP[monster] -= 50
-        
-        print("""
-        
-        *Boommm!*
-        You have used 'Meteor' skill which consumed 15 MP and dealt 50 damage to the \(monsterName[monster])
-        
-        """)
-    }
-}
-
-//Function ketika player memilih Shield saat melawan monster
-func shield(monster: Int) {
-    if (MP < 10) {
-        print("""
-        
-        You don't have enough MP to use this skill.
-        
-        """)
-    } else {
-        MP -= 10
-        skillStack.insert("Shield")
-        
-        print("""
-        
-        *Shriiing!*
-        You have used 'Shield' skill which consumed 10 MP and will protect you from the \(monsterName[monster])s attack for 1 turn.
-        
-        """)
-    }
-}
-
-//Function untuk mengecek Skill Stack apakah ada Shield? Jika ada maka return skip yang menandakan bahwa monster tidak bisa mendamage player selama 1 turn
-func checkSkillStack() -> String {
-    if (skillStack.contains("Shield")) {
-        return "Skip"
-    }
-    
-    return "None"
-}
-
-//Function untuk menjalankan logika saat monster menyerang
-func enemyAttack(monster: Int) {
-    if (checkSkillStack() == "Skip") {
-        print("\nThe \(monsterName[monster]) jumps to your face, yet you succeeded to block his attacks with your shield.\n")
-        
-        skillStack.remove("Shield")
-    } else {
-        let damage = Int.random(in: 1..<5)
-        HP -= damage
-        
-        if (damage < 3) {
-            print("\nThe \(monsterName[monster]) throws a huge rock at your way, yet you managed to smash the rock, but the shards still managed to scratch you making your health decrease by \(damage).\n")
-        } else {
-            print("\nThe \(monsterName[monster]) swiftly moves towards your back and slashed your body with a sharp rock making your health decrease by \(damage).\n")
-        }
-    }
-    
-    let coins = Double(round(1000 * Double.random(in: 1..<25)) / 1000)
-    money += coins
-    
-    print("\nYou gained \(coins) Coins.\n")
-}
-
-//Function untuk menampilkan layar saat battle bersama monster
-func monsterAttackScreen(monster: Int) {
-    var choice: String = ""
-    var turn: Int = 0
-    
-    monsterScreenPrint(monster: monster)
-    
-    repeat {
-        if turn % 2 == 0 {
-            var choiceRepeat: Bool = false
-            
-            repeat {
-                print("Your choice? ", terminator: "")
-                choice = readLine()!
-                
-                if (choice.range(of: "[^1-7]", options: .regularExpression) == nil) {
-                    if (Int(choice)! < 1 || Int(choice)! > 7) {
-                        choiceRepeat = true
-                        
-                        print("\nChoice must be between 1-7.\n")
-                    } else {
-                        choiceRepeat = false
-                    }
-                } else {
-                    choiceRepeat = true
-                    
-                    print("\nChoice must be a number between 1-7.\n")
-                }
-            } while choiceRepeat
-            
-            switch choice {
-            case "1":
-                physicalAttack(monster: monster)
-            case "2":
-                meteor(monster: monster)
-            case "3":
-                shield(monster: monster)
-            case "4":
-                healingScreen()
-            case "5":
-                recoverManaScreen()
-            case "6":
-                player.monsterEncounter()
-            case "7":
-                print("""
-                
-                You feel that if you don't escape soon, you won't be able to continue the fight.
-                You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
-                
-                You're safe, for now.
-                
-                """)
-                
-                returnToGoBack()
-            default:
-                print()
-            }
-        } else {
-            enemyAttack(monster: monster)
-        }
-        
-        if (choice != "6") {
-            turn += 1
-        }
-    } while choice != "7" && monsterHP[monster] > 0
-    
-    monsterHP[monster] = 1000
-}
-
 //Function untuk menampilkan layar saat memasuki shop
 func shopScreen() {
     var choice: String = ""
     var choiceRepeat: Bool = false
     
-    print("""
-    Welcome to the shop! ✨ Here you can buy potions such as elixir and potion to help you during your journey.
-    
-    [0] Back
-    [1] Potion (35 Coins)
-    [2] Elixir (50 Coins)
-    
-    """)
+    var shopIndex: Int = 0
+    let numberOfChoicesInShop: Int = shopEquipments.count + 2
     
     repeat {
-        print("Your choice? ", terminator: "")
-        choice = readLine()!
+        print("""
+        Welcome to the shop! ✨ Here you can buy potions such as elixir and potion to help you during your journey.
         
-        if (choice.range(of: "[^0-2]", options: .regularExpression) == nil) {
-            if (Int(choice)! < 0 || Int(choice)! > 2) {
+        [0] Back
+        """)
+        
+        for equipment in shopEquipments {
+            print("[\(shopIndex + 1)] \(equipment.name)", terminator: " ")
+            
+            if (player.equipments.contains(equipment)) {
+                print("(Already Owned).", terminator: " ")
+            } else {
+                print("(\(equipment.price) Coins).", terminator: " ")
+            }
+            
+            if (equipment.type == 0) {
+                print("Increases player MP by \(equipment.addStats).", terminator: " ")
+            } else {
+                print("", terminator: " ")
+            }
+            
+            print("\(equipment.description).")
+            
+            shopIndex += 1
+        }
+        
+        print("""
+        [\(shopIndex + 1)] \(player.elixir.name) (\(player.elixir.price) Coins)
+        [\(shopIndex + 2)] \(player.healthPotion.name) (\(player.healthPotion.price) Coins)
+        
+        """)
+        
+        repeat {
+            print("Your choice? ", terminator: "")
+            choice = readLine()!
+            
+            if (choice.range(of: "[^0-" + String(numberOfChoicesInShop) + "]", options: .regularExpression) == nil) {
+                if (Int(choice)! < 0 || Int(choice)! > numberOfChoicesInShop) {
+                    choiceRepeat = true
+                    
+                    print("\nChoice must be between 0-" + String(numberOfChoicesInShop) + ".\n")
+                } else {
+                    choiceRepeat = false
+                }
+            } else {
                 choiceRepeat = true
                 
-                print("\nChoice must be between 0-2.\n")
-            } else {
-                choiceRepeat = false
+                print("\nChoice must be a number between 0-" + String(numberOfChoicesInShop) + ".\n")
             }
+        } while choiceRepeat
+        
+        if (Int(choice) == shopIndex + 1 || Int(choice) == shopIndex + 2) {
+            var amount: Int = 0
+            var buy: Bool = false
+            var temp: String = ""
+            
+            repeat {
+                print("\nHowmany would you like to buy? ([0] Back) ", terminator: "")
+                temp = readLine()!
+                
+                if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
+                    buy = false
+                    
+                    print("\nYou must only input a number.\n")
+                } else {
+                    if (Int(temp)! < 0) {
+                        buy = false
+                        
+                        print("\nInput may not be less than 0.\n")
+                    } else {
+                        buy = true
+                    }
+                }
+            } while !buy
+            
+            amount = Int(temp)!
+            
+            player.buyPotion(amount: amount, type: Int(choice)! - shopIndex - 1)
         } else {
-            choiceRepeat = true
-            
-            print("\nChoice must be a number between 0-2.\n")
+            player.buyEquipment(equipment: shopEquipments[Int(choice)! - 1])
         }
-    } while choiceRepeat
+    } while (choice != "0")
     
-    switch choice {
-    case "1":
-        var amount: Int = 0
-        var buy: Bool = false
-        var temp: String = ""
-        
-        repeat {
-            print("\nHowmany would you like to buy? ([0] Back) ", terminator: "")
-            temp = readLine()!
-            
-            if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
-                buy = false
-                
-                print("\nYou must only input a number.\n")
-            } else {
-                if (Int(temp)! < 0) {
-                    buy = false
-                    
-                    print("\nInput may not be less than 0.\n")
-                } else {
-                    buy = true
-                }
-            }
-        } while !buy
-        
-        amount = Int(temp)!
-        
-        if (amount > 0) {
-            if (money >= Double(price["Potion"]! * amount)) {
-                potions["Potion"]! += amount
-                money -= Double(price["Potion"]! * amount)
-            } else {
-                print("\nYour money is not enough.\n")
-                
-                returnToGoBack()
-            }
-        }
-    case "2":
-        var amount: Int = 0
-        var buy: Bool = false
-        var temp: String = ""
-        
-        repeat {
-            print("\nHowmany would you like to buy? ([0] Back) ", terminator: "")
-            temp = readLine()!
-            
-            if (temp.range(of: "[^0-9]", options: .regularExpression) != nil) {
-                buy = false
-                
-                print("\nYou must only input a number.\n")
-            } else {
-                if (Int(temp)! < 0) {
-                    buy = false
-                    
-                    print("\nInput may not be less than 0.\n")
-                } else {
-                    buy = true
-                }
-            }
-        } while !buy
-        
-        amount = Int(temp)!
-        
-        if (amount > 0) {
-            if (money >= Double(price["Elixir"]! * amount)) {
-                potions["Elixir"]! += amount
-                money -= Double(price["Elixir"]! * amount)
-            } else {
-                print("\nYour money is not enough.\n")
-                
-                returnToGoBack()
-            }
-        }
-    default:
-        print()
-    }
 }
 
 // Game Logic Starts Here
@@ -540,7 +166,7 @@ repeat {
     
     if (userName.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
         print("\nYou must enter your name.\n")
-    } else {
+    } else if (userName.range(of: "[^a-zA-Z]", options: .regularExpression) != nil) {
         print("\nName must only be characters, no symbols, numbers, and whitespaces allowed.\n")
     }
 } while userName.trimmingCharacters(in: .whitespacesAndNewlines) == "" || (userName.range(of: "[^a-zA-Z]", options: .regularExpression) != nil)
@@ -562,7 +188,7 @@ repeat {
 
     [F]orest of Troll
     [M]ountain of Golem
-    [Q]uit game
+    [Q]uit Game
 
     """)
     
@@ -579,37 +205,40 @@ repeat {
     } while (mainChoice.lowercased() == "c" || mainChoice.lowercased() == "h" || mainChoice.lowercased() == "f" || mainChoice.lowercased() == "m" || mainChoice.lowercased() == "q" ||  mainChoice.lowercased() == "r" ||  mainChoice.lowercased() == "s") == false
     
     if (mainChoice.lowercased() == "c") {
-        print("""
-        Player Name: \(userName)
-        
-        HP: \(HP)/100
-        MP: \(MP)/50
-        Money: \(money)
-        
-        Magic:
-        - Physical Attack. No mana required. Deal 5pt of damage.
-        - Meteor. Use 15pt of MP. Deal 50pt of damage.
-        - Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
-        
-        Items:
-        - Potion x\(potions["Potion"]!). Heal 20pt of your HP
-        - Elixir x\(elixir). Add 10pt of your MP.
-        
-        """)
-        
-        returnToGoBack()
+//        print("""
+//        Player Name: \(userName)
+//
+//        HP: \(HP)/100
+//        MP: \(MP)/50
+//        Money: \(money)
+//
+//        Magic:
+//        - Physical Attack. No mana required. Deal 5pt of damage.
+//        - Meteor. Use 15pt of MP. Deal 50pt of damage.
+//        - Shield. Use 10pt of MP. Block enemy's attack in 1 turn.
+//
+//        Items:
+//        - Potion x\(potions["Potion"]!). Heal 20pt of your HP
+//        - Elixir x\(elixir). Add 10pt of your MP.
+//
+//        """)
+//
+//        returnToGoBack()
+        player.showStats()
     } else if (mainChoice.lowercased() == "h") {
-        healingScreen()
+        player.healingScreen()
     } else if (mainChoice.lowercased() == "f") {
-        monsterAttackScreen(monster: 0)
+        player.monster = Monster(name: "Troll")
+        player.monsterEncounter()
     } else if (mainChoice.lowercased() == "m") {
-        monsterAttackScreen(monster: 1)
+        player.monster = Monster(name: "Golem")
+        player.monsterEncounter()
     } else if (mainChoice.lowercased() == "r") {
-        recoverManaScreen()
+        player.recoverManaScreen()
     } else if (mainChoice.lowercased() == "s") {
         shopScreen()
     }
-} while mainChoice.lowercased() != "q" && HP > 0
+} while mainChoice.lowercased() != "q" && player.HP > 0
 
 if (HP <= 0) {
     print("\nToo bad, \(userName)... You have drained all your health and died as a hero in the hands of the monster 🥲\n")

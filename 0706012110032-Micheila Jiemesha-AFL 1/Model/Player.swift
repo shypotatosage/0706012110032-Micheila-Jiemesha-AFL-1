@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Player {
+class Player {
     var name: String
     var HP: Int = 100
     var MP: Int = 50
@@ -17,12 +17,16 @@ struct Player {
     var equipments: Set<Equipment> = Set<Equipment>()
     var actions: [Action] = [Action]()
     var monster: Monster?
+    var skillStack: [String] = []
     
     init(name: String) {
         self.name = name
+        actions.append(Action(name: "Physical Attack", mp: 0, points: 5, type: 0, description: "Deal 5pt of damage.", messageAfterUsed: "\n*Slash*\nYou have dealt 5 damage to your enemy."))
+        actions.append(Action(name: "Meteor", mp: 15, points: 5, type: 0, description: "Deal 50pt of damage.", messageAfterUsed: "\n*BOOM*\nYou have used 'Meteor' skill which consumed 15 MP and dealt 50 damage to your enemy."))
+        actions.append(Action(name: "Shield", mp: 10, points: 1, type: 1, description: "Block enemy's attack in 1 turn.", messageAfterUsed: "\n*Shriiing*\nYou have used 'Shield' skill which consumed 10 MP and will protect you from the enemy's attack for 1 turn."))
     }
     
-    mutating func buyPotion(amount: Int, type: Int) {
+    func buyPotion(amount: Int, type: Int) {
         if (type == 0) {
             money -= elixir.buyPotion(amount: amount, money: self.money)
         } else {
@@ -30,25 +34,270 @@ struct Player {
         }
     }
     
-    mutating func usePotion(type: Int) {
+    func usePotion(type: Int) {
         if (type == 0) {
             MP += elixir.usePotion()
+            
+            if (MP > 50) {
+                MP = 50
+            }
         } else {
             HP +=  healthPotion.usePotion()
+            
+            if (HP > 100) {
+                HP = 100
+            }
         }
     }
     
-    mutating func buyEquipment(equipment: Equipment) {
-        if (equipment.price <= money) {
-            money -= equipment.price
-            equipments.insert(equipment)
-            print("\nYou successfully bought \(equipment.name) for \(equipment.price)!\n")
+    func buyEquipment(equipment: Equipment) {
+        if (equipments.contains(equipment)) {
+            print("\nYou already own this \(equipment.name)!\n")
         } else {
-            print("\nYou don't have enough money to buy \(equipment.name). You need \(equipment.price - money) more.\n")
+            if (equipment.price <= money) {
+                money -= equipment.price
+                equipments.insert(equipment)
+                print("\nYou successfully bought \(equipment.name) for \(equipment.price)!\n")
+            } else {
+                print("\nYou don't have enough money to buy \(equipment.name). You need \(equipment.price - money) more.\n")
+            }
+        }
+    }
+    
+    func returnToGoBack() {
+        var returnChoice: String = ""
+        
+        repeat {
+            print("Press [return] to go back: ", terminator: "")
+            
+            returnChoice = readLine()!
+            
+            if (returnChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                print("\nWrong Input! You must [return] to continue\n")
+            }
+        } while returnChoice != ""
+    }
+    
+    func showStats() {
+        print("""
+        
+        Player Name: \(name)
+        
+        HP: \(HP)/100
+        MP: \(MP)/50
+        Money: \(money)
+        
+        Magic:
+        """)
+        
+        for action in actions {
+            print("- \(action.name).", terminator: " ")
+            
+            if (action.mp == 0) {
+                print("No mana required.", terminator: " ")
+            } else {
+                print("Use \(action.mp)pt of MP.", terminator: " ")
+            }
+            
+            print("\(action.description)")
+        }
+        
+        print("""
+        
+        Items:
+        - \(healthPotion.name) x\(healthPotion.owned). \(healthPotion.description)
+        - \(elixir.name) x\(elixir.owned). \(elixir.description)
+        """)
+        
+        for equipment in equipments {
+            print("- \(equipment.name). \(equipment.description)")
+        }
+        
+        print()
+        
+        returnToGoBack()
+    }
+    
+    func healingScreen() {
+        var healingChoice: String = ""
+        
+        if healthPotion.owned > 0 && HP < 100 {
+            print("""
+            \nYour HP is \(HP).
+            You have \(healthPotion.owned) Potions.
+            
+            """)
+            
+            repeat {
+                print("Are you sure you want to use 1 potion to heal wound? [Y/N] ", terminator: "")
+                
+                healingChoice = readLine()!
+                
+                if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
+                    print("\nYou must only choose between Y (Yes) or N (No).\n")
+                }
+            } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
+            
+            if (healingChoice.lowercased() == "y") {
+                usePotion(type: 1)
+                
+                repeat {
+                    if healthPotion.owned > 0 && HP < 100 {
+                        print("""
+                        \nYour HP is \(HP) now.
+                        You have \(healthPotion.owned) Potions left.
+                        
+                        """)
+                        
+                        repeat {
+                            print("Still want to use 1 potion to heal wound again? [Y/N] ", terminator: "")
+                            
+                            healingChoice = readLine()!
+                            
+                            if (healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n") {
+                                print("\nYou must only choose between Y (Yes) or N (No).\n")
+                            }
+                        } while healingChoice.lowercased() != "y" && healingChoice.lowercased() != "n"
+                        
+                        if (healingChoice.lowercased() == "y") {
+                            usePotion(type: 1)
+                        }
+                    } else if healthPotion.owned < 0 {
+                        print("\nYou don't have any potion left. Be careful of your next journey.\n")
+                        
+                        repeat {
+                            print("Press [return] to go back: ", terminator: "")
+                            
+                            healingChoice = readLine()!
+                            
+                            if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                                print("\nWrong Input! You must [return] to continue\n")
+                            }
+                        } while healingChoice != ""
+                    } else {
+                        print("\nYour health is already maxed.\n")
+                        
+                        repeat {
+                            print("Press [return] to go back: ", terminator: "")
+                            
+                            healingChoice = readLine()!
+                            
+                            if (healingChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                                print("\nWrong Input! You must [return] to continue\n")
+                            }
+                        } while healingChoice != ""
+                    }
+                } while healingChoice.lowercased() != "n" && healingChoice != ""
+            }
+        } else if healthPotion.owned < 0 {
+            print("\nYou don't have any potion left. Be careful of your next journey.\n")
+            
+            returnToGoBack()
+        } else {
+            print("\nYour health is already maxed.\n")
+            
+            returnToGoBack()
+        }
+    }
+    
+    func recoverManaScreen() {
+        var manaChoice: String = ""
+        
+        if elixir.owned > 0 && MP < 50 {
+            print("""
+            \nYour MP is \(MP).
+            You have \(elixir.owned) Elixirs.
+            
+            """)
+            
+            repeat {
+                print("Are you sure you want to use 1 elixir to recover mana? [Y/N] ", terminator: "")
+                
+                manaChoice = readLine()!
+                
+                if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
+                    print("\nYou must only choose between Y (Yes) or N (No).\n")
+                }
+            } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
+            
+            if (manaChoice.lowercased() == "y") {
+                usePotion(type: 0)
+                
+                repeat {
+                    if elixir.owned > 0 && MP < 50 {
+                        print("""
+                        \nYour MP is \(MP) now.
+                        You have \(elixir.owned) Elixirs left.
+                        
+                        """)
+                        
+                        repeat {
+                            print("Still want to use 1 elixir to recover mana again? [Y/N] ", terminator: "")
+                            
+                            manaChoice = readLine()!
+                            
+                            if (manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n") {
+                                print("\nYou must only choose between Y (Yes) or N (No).\n")
+                            }
+                        } while manaChoice.lowercased() != "y" && manaChoice.lowercased() != "n"
+                        
+                        if (manaChoice.lowercased() == "y") {
+                            usePotion(type: 0)
+                        }
+                    } else if elixir.owned < 0 {
+                        print("\nYou don't have any elixir left. Be careful of your next journey.")
+                        
+                        repeat {
+                            print("Press [return] to go back: ", terminator: "")
+                            
+                            manaChoice = readLine()!
+                            
+                            if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                                print("\nWrong Input! You must [return] to continue\n")
+                            }
+                        } while manaChoice != ""
+                    } else {
+                        print("\nYour mana is already maxed.")
+                        
+                        repeat {
+                            print("Press [return] to go back: ", terminator: "")
+                            
+                            manaChoice = readLine()!
+                            
+                            if (manaChoice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                                print("\nWrong Input! You must [return] to continue\n")
+                            }
+                        } while manaChoice != ""
+                    }
+                } while manaChoice.lowercased() != "n" && manaChoice != ""
+            }
+        } else if elixir.owned < 0 {
+            print("\nYou don't have any elixir left. Be careful of your next journey.")
+            
+            returnToGoBack()
+        } else {
+            print("\nYour mana is already maxed.")
+            
+            returnToGoBack()
+        }
+    }
+    
+    func useAction(actionIndex: Int) {
+        print(actions[actionIndex].messageAfterUsed)
+        
+        if (actions[actionIndex].type == 1) {
+            for _ in 1...actions[actionIndex].points {
+                skillStack.append("Shield")
+            }
+        } else {
+            monster?.HP -= actions[actionIndex].points
+            MP -= actions[actionIndex].mp
         }
     }
     
     func monsterEncounter() {
+        print()
+        
         if (monster?.name == "Troll") {
             print("""
             As you enter the forest, you feel a sense of unease wash over you.
@@ -59,22 +308,24 @@ struct Player {
             As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
             """)
         }
+    
+        print()
         
-        var choice = 0
+        var choice: String = ""
+        let numberOfChoicesOfAction = actions.count + 4
         
         repeat {
             print("""
-        
-        ❤️ Your HP: \(HP)
-        ⚡️ Your MP: \(MP)
-        💰 Your Money: \(money)
-        
-        """)
+            ❤️ Your HP: \(HP)
+            ⚡️ Your MP: \(MP)
+            💰 Your Money: \(money)
             
-            var num = 0
+            """)
+            
+            var actionIndex: Int = 0
             
             for action in actions {
-                print("[\(num + 1)] \(action.name)", terminator: " ")
+                print("[\(actionIndex + 1)] \(action.name)", terminator: " ")
                 
                 if (action.mp == 0) {
                     print("No mana required.", terminator: " ")
@@ -82,29 +333,72 @@ struct Player {
                     print("Use \(action.mp)pt of MP.", terminator: " ")
                 }
                 
-                print("\(action.description).")
+                print("\(action.description)")
                 
-                num += 1
+                actionIndex += 1
             }
             
-            print("[\(num + 1)] Use Potion to heal wound.")
-            print("[\(num + 2)] Use Elixir to recover mana.")
-            print("[\(num + 3)] Scan enemy's vital.")
-            print("[\(num + 4)] Flee from battle.")
+            print()
+            print("[\(actionIndex + 1)] Use Potion to heal wound.")
+            print("[\(actionIndex + 2)] Use Elixir to recover mana.")
+            print("[\(actionIndex + 3)] Scan enemy's vital.")
+            print("[\(actionIndex + 4)] Flee from battle.")
             
             var choiceRepeat: Bool = false
             
             repeat {
                 print("Your choice? ", terminator: "")
                 choice = readLine()!
+                
+                if (choice.range(of: "[^1-" + String(numberOfChoicesOfAction) + "]", options: .regularExpression) == nil) {
+                    if (Int(choice)! < 1 || Int(choice)! > numberOfChoicesOfAction) {
+                        choiceRepeat = true
+                        
+                        print("\nChoice must be between 1-" + String(numberOfChoicesOfAction) + ".\n")
+                    } else {
+                        choiceRepeat = false
+                    }
+                } else {
+                    choiceRepeat = true
+                    
+                    print("\nChoice must be a number between 1-" + String(numberOfChoicesOfAction) + ".\n")
+                }
             } while choiceRepeat
             
-            switch choice {
-            case 1:
-                <#code#>
-            default:
-                <#code#>
+            if (Int(choice)! < actionIndex + 1) {
+                useAction(actionIndex: Int(choice)! - 1)
+                
+                if (skillStack.contains("Shield")) {
+                    HP -= monster!.attack(shielded: true)
+                    skillStack.remove(at: skillStack.firstIndex(of: "Shield")!)
+                } else {
+                    HP -= monster!.attack(shielded: false)
+                }
+            } else if (Int(choice) == actionIndex + 1) {
+                healingScreen()
+            } else if (Int(choice) == actionIndex + 2) {
+                recoverManaScreen()
+            } else if (Int(choice) == actionIndex + 3) {
+                print("""
+                
+                😈 Name: \(monster!.name) x1
+                😈 Health: \(monster!.HP)
+                
+                """)
+                
+                returnToGoBack()
+            } else {
+                print("""
+                
+                You feel that if you don't escape soon, you won't be able to continue the fight.
+                You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
+                
+                You're safe, for now.
+                
+                """)
+                
+                returnToGoBack()
             }
-        } while (choice != actions.count + 4 && player.HP > 0)
+        } while (choice != String(numberOfChoicesOfAction) && player.HP > 0)
     }
 }

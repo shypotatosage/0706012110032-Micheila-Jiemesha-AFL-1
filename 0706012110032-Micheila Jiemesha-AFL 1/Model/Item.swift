@@ -11,6 +11,7 @@ class Item {
     var name: String
     var price: Int
     var addStats: Int
+    // Type 0 = Mana && Type 1 = HP && Type 2 = Attack
     var type: Int
     var description: String
     
