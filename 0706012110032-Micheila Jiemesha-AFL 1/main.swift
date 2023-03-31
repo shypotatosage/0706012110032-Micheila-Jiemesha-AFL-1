@@ -12,6 +12,7 @@ var player: Player = Player(name: "")
 var start: String = ""
 var mainChoice: String = ""
 var shopEquipments: [Equipment] = [Equipment(name: "Elven Shoes", price: 100, addStats: 20, type: 1, breakingIn: 10, description: "Adds 20 HP to your stats."), Equipment(name: "Kings Gauntlet", price: 200, addStats: 15, type: 2, breakingIn: 5, description: "Adds 15 Attack Point to your stats."), Equipment(name: "Bloodvine", price: 150, addStats: 15, type: 0, breakingIn: 7, description: "Adds 15 MP to your stats.")]
+var monster: Monster = Monster(name: "")
 
 // Functions
 // ==========================================================================================
@@ -121,6 +122,137 @@ func shopScreen() {
     
 }
 
+func monsterEncounter() {
+    print()
+    
+    if (monster.name == "Troll") {
+        print("""
+        As you enter the forest, you feel a sense of unease wash over you.
+        Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
+        """)
+    } else {
+        print("""
+        As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
+        """)
+    }
+
+    print()
+    
+    var choice: String = ""
+    let numberOfChoicesOfAction = player.actions.count + 4
+    
+    repeat {
+        print("""
+        ❤️ Your HP: \(player.HP)
+        ⚡️ Your MP: \(player.MP)
+        💰 Your Money: \(player.money)
+        
+        """)
+        
+        var actionIndex: Int = 0
+        
+        for action in player.actions {
+            print("[\(actionIndex + 1)] \(action.name)", terminator: " ")
+            
+            if (action.mp == 0) {
+                print("No mana required.", terminator: " ")
+            } else {
+                print("Use \(action.mp)pt of MP.", terminator: " ")
+            }
+            
+            print("\(action.description)")
+            
+            actionIndex += 1
+        }
+        
+        print()
+        print("[\(actionIndex + 1)] Use Potion to heal wound.")
+        print("[\(actionIndex + 2)] Use Elixir to recover mana.")
+        print("[\(actionIndex + 3)] Scan enemy's vital.")
+        print("[\(actionIndex + 4)] Flee from battle.")
+        
+        var choiceRepeat: Bool = false
+        
+        repeat {
+            print("Your choice? ", terminator: "")
+            choice = readLine()!
+            
+            if (choice.range(of: "[^1-" + String(numberOfChoicesOfAction) + "]", options: .regularExpression) == nil && choice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
+                if (Int(choice)! < 1 || Int(choice)! > numberOfChoicesOfAction) {
+                    choiceRepeat = true
+                    
+                    print("\nChoice must be between 1-" + String(numberOfChoicesOfAction) + ".\n")
+                } else {
+                    choiceRepeat = false
+                }
+            } else {
+                choiceRepeat = true
+                
+                print("\nChoice must be a number between 1-" + String(numberOfChoicesOfAction) + ".\n")
+            }
+        } while choiceRepeat
+        
+        if (Int(choice)! < actionIndex + 1) {
+            monster.HP -= player.useAction(actionIndex: Int(choice)! - 1)
+            
+            if (player.skillStack.contains("Shield")) {
+                player.HP -= monster.attack(shielded: true)
+                player.skillStack.remove(at: player.skillStack.firstIndex(of: "Shield")!)
+            } else {
+                player.HP -= monster.attack(shielded: false)
+            }
+            
+            for equipment in player.equipments {
+                let isBroken = equipment.use()
+                
+                if (isBroken) {
+                    print("Your \(equipment.name) has broken.\n")
+                    equipment.timesUsed = 0
+                    equipment.isBroken = false
+                    player.equipments.remove(at: player.equipments.firstIndex(of: equipment)!)
+                }
+            }
+            
+            if (player.HP > 100 + player.equipmentHPBonus()) {
+                player.HP = 100 + player.equipmentHPBonus()
+            }
+            
+            if (player.MP > 50 + player.equipmentMPBonus()) {
+                player.MP = 50 + player.equipmentMPBonus()
+            }
+            
+            let coinsDropped: Int = Int.random(in: 10..<25)
+            player.money += coinsDropped
+            
+            print("You gained \(coinsDropped) coins.\n")
+        } else if (Int(choice) == actionIndex + 1) {
+            player.healingScreen()
+        } else if (Int(choice) == actionIndex + 2) {
+            player.recoverManaScreen()
+        } else if (Int(choice) == actionIndex + 3) {
+            print("""
+            
+            😈 Name: \(monster.name) x1
+            😈 Health: \(monster.HP)
+            
+            """)
+            
+            returnToGoBack()
+        } else {
+            print("""
+            
+            You feel that if you don't escape soon, you won't be able to continue the fight.
+            You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
+            
+            You're safe, for now.
+            
+            """)
+            
+            returnToGoBack()
+        }
+    } while (choice != String(numberOfChoicesOfAction) && player.HP > 0)
+}
+
 // Game Logic Starts Here
 // ==========================================================================================
 
@@ -212,11 +344,11 @@ repeat {
     } else if (mainChoice.lowercased() == "h") {
         player.healingScreen()
     } else if (mainChoice.lowercased() == "f") {
-        player.monster = Monster(name: "Troll")
-        player.monsterEncounter()
+        monster = Monster(name: "Troll")
+        monsterEncounter()
     } else if (mainChoice.lowercased() == "m") {
-        player.monster = Monster(name: "Golem")
-        player.monsterEncounter()
+        monster = Monster(name: "Golem")
+        monsterEncounter()
     } else if (mainChoice.lowercased() == "r") {
         player.recoverManaScreen()
     } else if (mainChoice.lowercased() == "s") {

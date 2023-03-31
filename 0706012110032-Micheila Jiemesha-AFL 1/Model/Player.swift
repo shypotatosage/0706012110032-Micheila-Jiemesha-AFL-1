@@ -16,7 +16,6 @@ class Player {
     var healthPotion: Potion = Potion(name: "Health Potion", price: 35, addStats: 20, type: 1, owned: 20, description: "Heal 20pt of your HP")
     var equipments: Set<Equipment> = Set<Equipment>()
     var actions: [Action] = [Action]()
-    var monster: Monster?
     var skillStack: [String] = []
     
     init(name: String) {
@@ -325,147 +324,20 @@ class Player {
         }
     }
     
-    func useAction(actionIndex: Int) {
+    func useAction(actionIndex: Int) -> Int {
         print(actions[actionIndex].messageAfterUsed)
         
         if (actions[actionIndex].type == 1) {
             for _ in 1...actions[actionIndex].points {
                 skillStack.append("Shield")
             }
+            
+            return 0
         } else {
-            monster?.HP -= actions[actionIndex].points  + equipmentAttackBonus()
+            let monsterHPDecrease = actions[actionIndex].points  + equipmentAttackBonus()
             MP -= actions[actionIndex].mp
+            
+            return monsterHPDecrease
         }
-    }
-    
-    func monsterEncounter() {
-        print()
-        
-        if (monster?.name == "Troll") {
-            print("""
-            As you enter the forest, you feel a sense of unease wash over you.
-            Suddenly, you hear the sound of twigs snapping behind you. You quickly spin around, and find a Troll emerging from the shadows.
-            """)
-        } else {
-            print("""
-            As you make your way through the rugged mountain terrain, you can feel the chill of the wind biting at your skin. Suddenly, you hear a sound that makes you freeze in your tracks. That's when you see it - a massive, snarling Golem emerging from the shadows.
-            """)
-        }
-    
-        print()
-        
-        var choice: String = ""
-        let numberOfChoicesOfAction = actions.count + 4
-        
-        repeat {
-            print("""
-            ❤️ Your HP: \(HP)
-            ⚡️ Your MP: \(MP)
-            💰 Your Money: \(money)
-            
-            """)
-            
-            var actionIndex: Int = 0
-            
-            for action in actions {
-                print("[\(actionIndex + 1)] \(action.name)", terminator: " ")
-                
-                if (action.mp == 0) {
-                    print("No mana required.", terminator: " ")
-                } else {
-                    print("Use \(action.mp)pt of MP.", terminator: " ")
-                }
-                
-                print("\(action.description)")
-                
-                actionIndex += 1
-            }
-            
-            print()
-            print("[\(actionIndex + 1)] Use Potion to heal wound.")
-            print("[\(actionIndex + 2)] Use Elixir to recover mana.")
-            print("[\(actionIndex + 3)] Scan enemy's vital.")
-            print("[\(actionIndex + 4)] Flee from battle.")
-            
-            var choiceRepeat: Bool = false
-            
-            repeat {
-                print("Your choice? ", terminator: "")
-                choice = readLine()!
-                
-                if (choice.range(of: "[^1-" + String(numberOfChoicesOfAction) + "]", options: .regularExpression) == nil && choice.trimmingCharacters(in:.whitespacesAndNewlines) != "") {
-                    if (Int(choice)! < 1 || Int(choice)! > numberOfChoicesOfAction) {
-                        choiceRepeat = true
-                        
-                        print("\nChoice must be between 1-" + String(numberOfChoicesOfAction) + ".\n")
-                    } else {
-                        choiceRepeat = false
-                    }
-                } else {
-                    choiceRepeat = true
-                    
-                    print("\nChoice must be a number between 1-" + String(numberOfChoicesOfAction) + ".\n")
-                }
-            } while choiceRepeat
-            
-            if (Int(choice)! < actionIndex + 1) {
-                useAction(actionIndex: Int(choice)! - 1)
-                
-                if (skillStack.contains("Shield")) {
-                    HP -= monster!.attack(shielded: true)
-                    skillStack.remove(at: skillStack.firstIndex(of: "Shield")!)
-                } else {
-                    HP -= monster!.attack(shielded: false)
-                }
-                
-                for equipment in equipments {
-                    let isBroken = equipment.use()
-                    
-                    if (isBroken) {
-                        print("Your \(equipment.name) has broken.\n")
-                        equipment.timesUsed = 0
-                        equipment.isBroken = false
-                        equipments.remove(at: equipments.firstIndex(of: equipment)!)
-                    }
-                }
-                
-                if (HP > 100 + equipmentHPBonus()) {
-                    HP = 100 + equipmentHPBonus()
-                }
-                
-                if (MP > 50 + equipmentMPBonus()) {
-                    MP = 50 + equipmentMPBonus()
-                }
-                
-                let coinsDropped: Int = Int.random(in: 10..<25)
-                money += coinsDropped
-                
-                print("You gained \(coinsDropped) coins.\n")
-            } else if (Int(choice) == actionIndex + 1) {
-                healingScreen()
-            } else if (Int(choice) == actionIndex + 2) {
-                recoverManaScreen()
-            } else if (Int(choice) == actionIndex + 3) {
-                print("""
-                
-                😈 Name: \(monster!.name) x1
-                😈 Health: \(monster!.HP)
-                
-                """)
-                
-                returnToGoBack()
-            } else {
-                print("""
-                
-                You feel that if you don't escape soon, you won't be able to continue the fight.
-                You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
-                
-                You're safe, for now.
-                
-                """)
-                
-                returnToGoBack()
-            }
-        } while (choice != String(numberOfChoicesOfAction) && player.HP > 0)
     }
 }
