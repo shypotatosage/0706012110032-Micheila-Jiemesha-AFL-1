@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040C213429DBC3B70046D911 /* ItemProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C213329DBC3B70046D911 /* ItemProtocol.swift */; };
 		04230B8E29AD9DF200A447D4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04230B8D29AD9DF200A447D4 /* main.swift */; };
 		0436E3C729D28C860095A1AA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3C629D28C860095A1AA /* Item.swift */; };
 		0436E3CB29D28CB00095A1AA /* Equipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3CA29D28CB00095A1AA /* Equipment.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040C213329DBC3B70046D911 /* ItemProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemProtocol.swift; sourceTree = "<group>"; };
 		04230B8A29AD9DF200A447D4 /* 0706012110032-Micheila Jiemesha-AFL 1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "0706012110032-Micheila Jiemesha-AFL 1"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04230B8D29AD9DF200A447D4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0436E3C629D28C860095A1AA /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -50,6 +52,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		040C213229DBB9C60046D911 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				040C213329DBC3B70046D911 /* ItemProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
 		04230B8129AD9DF200A447D4 = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +79,7 @@
 		04230B8C29AD9DF200A447D4 /* 0706012110032-Micheila Jiemesha-AFL 1 */ = {
 			isa = PBXGroup;
 			children = (
+				040C213229DBB9C60046D911 /* Protocol */,
 				0436E3D429D28D3F0095A1AA /* Model */,
 				04230B8D29AD9DF200A447D4 /* main.swift */,
 			);
@@ -152,6 +163,7 @@
 				0436E3C729D28C860095A1AA /* Item.swift in Sources */,
 				0436E3D329D28D2F0095A1AA /* Player.swift in Sources */,
 				04230B8E29AD9DF200A447D4 /* main.swift in Sources */,
+				040C213429DBC3B70046D911 /* ItemProtocol.swift in Sources */,
 				0436E3CB29D28CB00095A1AA /* Equipment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

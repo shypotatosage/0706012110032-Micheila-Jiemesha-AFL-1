@@ -11,6 +11,7 @@ struct Monster {
     var HP: Int = 1000
     var name: String
     
+    // Initializer
     init(name: String) {
         self.name = name
     }
@@ -32,6 +33,7 @@ struct Monster {
         }
     }
     
+    // Function Mengurangi HP Enemy Setelah User Menyerang Enemy
     mutating func attacked(damage: Int) {
         HP -= damage
     }

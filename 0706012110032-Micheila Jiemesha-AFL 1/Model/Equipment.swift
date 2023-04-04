@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Equipment: Item, Hashable, Equatable {
+class Equipment: Item, ItemProtocol, Hashable, Equatable {
     // Supaya Bisa Memasukkan Equipment Ke Dalam Set
     // Equatable
     static func == (lhs: Equipment, rhs: Equipment) -> Bool {
@@ -20,7 +20,7 @@ class Equipment: Item, Hashable, Equatable {
     }
     
     var breaksIn: Int = 0
-    var isBroken: Bool = false
+    var isBroken: Int = 0
     var timesUsed: Int = 0
     
     // Initializer
@@ -30,11 +30,11 @@ class Equipment: Item, Hashable, Equatable {
     }
     
     // Function Ketika User Menggunakan Equipment Selama Melakukan Serangan/Menggunakan Skill Ke Enemy
-    func use() -> Bool {
+    func use() -> Int {
         timesUsed += 1
         
         if (timesUsed == breaksIn) {
-            isBroken = true
+            isBroken = 1
         }
         
         return isBroken

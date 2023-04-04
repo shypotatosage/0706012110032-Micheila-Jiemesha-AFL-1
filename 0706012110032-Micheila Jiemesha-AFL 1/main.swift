@@ -191,10 +191,10 @@ func monsterEncounter() {
             for equipment in player.equipments {
                 let isBroken = equipment.use()
                 
-                if (isBroken) {
+                if (isBroken == 1) {
                     print("Your \(equipment.name) has broken.\n")
                     equipment.timesUsed = 0
-                    equipment.isBroken = false
+                    equipment.isBroken = 0
                     player.equipments.remove(at: player.equipments.firstIndex(of: equipment)!)
                 }
             }

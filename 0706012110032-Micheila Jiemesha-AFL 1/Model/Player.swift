@@ -77,13 +77,13 @@ class Player {
     // Function Ketika User Memilih Untuk Menggunakan Health Potion/Elixir
     func usePotion(type: Int) {
         if (type == 0) {
-            MP += elixir.usePotion()
+            MP += elixir.use()
             
             if (MP > 50 + equipmentMPBonus()) {
                 MP = 50 + equipmentMPBonus()
             }
         } else {
-            HP +=  healthPotion.usePotion()
+            HP +=  healthPotion.use()
             
             if (HP > 100 + equipmentHPBonus()) {
                 HP = 100 + equipmentHPBonus()

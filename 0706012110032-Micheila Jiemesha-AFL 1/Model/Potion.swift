@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Potion: Item {
+class Potion: Item, ItemProtocol {
     var owned: Int = 0
     
     init(name: String, price: Int, addStats: Int, type: Int, owned: Int, description: String) {
@@ -51,7 +51,7 @@ class Potion: Item {
     }
     
     // Function Ketika User Memilih Untuk Menggunakan Health Potion/Elixir
-    func usePotion() -> Int {
+    func use() -> Int {
         if (owned <= 0) {
             print("\nYou don't have any \(name)s to use.\n")
             
