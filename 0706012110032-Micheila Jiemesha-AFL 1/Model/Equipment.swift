@@ -9,12 +9,12 @@ import Foundation
 
 class Equipment: Item, ItemProtocol, Hashable, Equatable {
     // Supaya Bisa Memasukkan Equipment Ke Dalam Set
-    // Equatable
+    // Dari Equatable Protocol
     static func == (lhs: Equipment, rhs: Equipment) -> Bool {
         return lhs.name == rhs.name
     }
     
-    // Hashable
+    // Dari Hashable Protocol
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }

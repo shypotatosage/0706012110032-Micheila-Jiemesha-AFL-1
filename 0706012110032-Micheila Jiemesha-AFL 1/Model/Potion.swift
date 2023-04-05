@@ -10,6 +10,7 @@ import Foundation
 class Potion: Item, ItemProtocol {
     var owned: Int = 0
     
+    // Initilizer
     init(name: String, price: Int, addStats: Int, type: Int, owned: Int, description: String) {
         super.init(name: name, price: price, addStats: addStats, type: type, description: description)
         self.owned = owned

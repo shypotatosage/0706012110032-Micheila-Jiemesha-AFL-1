@@ -347,6 +347,9 @@ class Player {
             
             return 0
         } else {
+            if (equipmentAttackBonus() > 0) {
+                print("You dealt an extra \(equipmentAttackBonus()) damage from your equipment.\n")
+            }
             let monsterHPDecrease = actions[actionIndex].points  + equipmentAttackBonus()
             MP -= actions[actionIndex].mp
             
