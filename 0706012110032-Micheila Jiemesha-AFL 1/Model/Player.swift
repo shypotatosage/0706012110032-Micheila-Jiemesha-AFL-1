@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Player {
+class Player: PlayerProtocol {
     var name: String
     var HP: Int = 100
     var MP: Int = 50

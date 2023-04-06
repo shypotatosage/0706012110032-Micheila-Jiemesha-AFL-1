@@ -15,6 +15,7 @@
 		0436E3CF29D28CF20095A1AA /* Monster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3CE29D28CF20095A1AA /* Monster.swift */; };
 		0436E3D129D28D0A0095A1AA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3D029D28D0A0095A1AA /* Action.swift */; };
 		0436E3D329D28D2F0095A1AA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436E3D229D28D2F0095A1AA /* Player.swift */; };
+		04E3F38629DE6F2700AA6BA2 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E3F38529DE6F2700AA6BA2 /* PlayerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,7 @@
 		0436E3CE29D28CF20095A1AA /* Monster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monster.swift; sourceTree = "<group>"; };
 		0436E3D029D28D0A0095A1AA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		0436E3D229D28D2F0095A1AA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		04E3F38529DE6F2700AA6BA2 /* PlayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				040C213329DBC3B70046D911 /* ItemProtocol.swift */,
+				04E3F38529DE6F2700AA6BA2 /* PlayerProtocol.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 				0436E3CD29D28CDB0095A1AA /* Potion.swift in Sources */,
 				0436E3C729D28C860095A1AA /* Item.swift in Sources */,
 				0436E3D329D28D2F0095A1AA /* Player.swift in Sources */,
+				04E3F38629DE6F2700AA6BA2 /* PlayerProtocol.swift in Sources */,
 				04230B8E29AD9DF200A447D4 /* main.swift in Sources */,
 				040C213429DBC3B70046D911 /* ItemProtocol.swift in Sources */,
 				0436E3CB29D28CB00095A1AA /* Equipment.swift in Sources */,
