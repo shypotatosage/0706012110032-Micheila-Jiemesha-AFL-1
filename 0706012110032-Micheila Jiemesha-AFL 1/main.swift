@@ -107,8 +107,32 @@ func shopScreen() {
     
 }
 
+func fleeFromMonsterScreen() {
+    print("""
+    
+    You feel that if you don't escape soon, you won't be able to continue the fight.
+    You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
+    
+    You're safe, for now.
+    
+    """)
+    
+    player.returnToGoBack()
+}
+
+func monsterStatsScreen() {
+    print("""
+    
+    😈 Name: \(monster.name) x1
+    😈 Health: \(monster.HP)
+    
+    """)
+    
+    player.returnToGoBack()
+}
+
 // Function Tampilan Ketika User Masuk Ke Forest/Mountain
-func monsterEncounter() {
+func monsterEncounterScreen() {
     print()
     
     if (monster.name == "Troll") {
@@ -216,25 +240,9 @@ func monsterEncounter() {
         } else if (Int(choice) == actionIndex + 2) {
             player.recoverManaScreen()
         } else if (Int(choice) == actionIndex + 3) {
-            print("""
-            
-            😈 Name: \(monster.name) x1
-            😈 Health: \(monster.HP)
-            
-            """)
-            
-            player.returnToGoBack()
+            monsterStatsScreen()
         } else {
-            print("""
-            
-            You feel that if you don't escape soon, you won't be able to continue the fight.
-            You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.
-            
-            You're safe, for now.
-            
-            """)
-            
-            player.returnToGoBack()
+            fleeFromMonsterScreen()
         }
     } while (choice != String(numberOfChoicesOfAction) && player.HP > 0)
 }
@@ -242,6 +250,7 @@ func monsterEncounter() {
 // Game Logic Starts Here
 // ==========================================================================================
 
+// Starting Screen
 repeat {
     print("""
     Welcome to the world of magic! 🧙🏻‍♂️🧌
@@ -262,6 +271,7 @@ var userName: String = ""
 
 print()
 
+// Asking Players Name
 repeat {
     print("May I know your name, a young wizard? ", terminator: "")
     userName = readLine()!
@@ -277,6 +287,7 @@ print("\nNice to meet you \(userName)!")
 
 player = Player(name: userName)
 
+// Main Menu Screen
 repeat {
     print("\nFrom here, you can...")
     
@@ -312,10 +323,10 @@ repeat {
         player.healingScreen()
     } else if (mainChoice.lowercased() == "f") {
         monster = Monster(name: "Troll")
-        monsterEncounter()
+        monsterEncounterScreen()
     } else if (mainChoice.lowercased() == "m") {
         monster = Monster(name: "Golem")
-        monsterEncounter()
+        monsterEncounterScreen()
     } else if (mainChoice.lowercased() == "r") {
         player.recoverManaScreen()
     } else if (mainChoice.lowercased() == "s") {
